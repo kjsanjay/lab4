@@ -12,13 +12,14 @@
 #include <kernel.h>
 #include <sched.h>
 #include "sched_i.h"
+#include <kernel_consts.h>
 
 
 
 static tcb_t* run_list[OS_MAX_TASKS]  __attribute__((unused));
 
 /* A high bit in this bitmap means that the task whose priority is
- * equal to the bit number of the high bit is runnable.
+ * equal to the bit number3 of the high bit is runnable.
  */
 static uint8_t run_bits[OS_MAX_TASKS/8] __attribute__((unused));
 
@@ -84,7 +85,7 @@ void runqueue_add(tcb_t* tcb  __attribute__((unused)), uint8_t prio  __attribute
 {
 
 	 	uint8_t ostcby,ostcbx;
-        
+
         ostcby = prio >> 3; 
 		ostcbx = prio & 0x07;
 
@@ -106,7 +107,26 @@ void runqueue_add(tcb_t* tcb  __attribute__((unused)), uint8_t prio  __attribute
  */
 tcb_t* runqueue_remove(uint8_t prio  __attribute__((unused)))
 {
-	return (tcb_t *)1; // fix this; dummy return to prevent warning messages	
+
+        uint8_t ostcby,ostcbx;
+        tcb_t *ret_tcb;
+        
+
+        ostcby = prio >> 3; 
+        ostcbx = prio & 0x07;
+
+
+        if(run_bits[ostcby] == 0){ // Have to do this so that group run bits are not modified when there is 
+            //something else in that group.
+        group_run_bits &= ~(0x1 << ostcby);
+        }
+        run_bits[ostcby] &= ~(0x1 << ostcbx);
+        
+        ret_tcb = run_list[prio];
+
+        run_list[prio] = NULL;
+
+	return (ret_tcb); // fix this; dummy return to prevent warning messages	
 }
 
 /**
