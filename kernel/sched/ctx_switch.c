@@ -20,6 +20,14 @@
 
 static __attribute__((unused)) tcb_t* cur_tcb; /* use this if needed */
 
+extern uint8_t highest_prio();
+extern tcb_t* runqueue_remove(uint8_t);
+
+extern void ctx_switch_full(void* ,void* );
+extern static tcb_t* run_list(uint8_t);
+
+
+
 /**
  * @brief Initialize the current TCB and priority.
  *
@@ -67,7 +75,24 @@ void dispatch_nosave(void)
  */
 void dispatch_sleep(void)
 {
+	tcb_t* curr_tcb = get_cur_tcb();
+	tcb_t* next_tcb;
+	uint8_t curr_task_prio;
+	uint8_t next_highest_prio;
+
+	curr_task_prio = get_cur_prio;
+	runqueue_remove(curr_task_prio);
+
+	next_highest_prio = highest_prio();
+	next_tcb = run_list[next_highest_prio];
+
+	ctx_switch_full((void*) next_tcb->context,(void*) curr_tcb->context);
+
+
 	
+
+
+
 }
 
 /**
@@ -75,9 +100,8 @@ void dispatch_sleep(void)
  */
 uint8_t get_cur_prio(void)
 {
-	return 1; //fix this; dummy return to prevent compiler warning
+	return cur_tcb->cur_prio; //fix this; dummy return to prevent compiler warning
 }
-
 /**
  * @brief Returns the TCB of the current task.
  */
