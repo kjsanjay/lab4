@@ -28,6 +28,8 @@
 extern int assign_schedule(task_t **,size_t);
 extern void allocate_tasks(task_t **, size_t);
 extern void sched_init(task_t*);
+extern uint8_t highest_prio();
+
 
 
 
@@ -35,6 +37,7 @@ extern void sched_init(task_t*);
 int task_create(task_t* tasks  __attribute__((unused)), size_t num_tasks  __attribute__((unused)))
 {
   int bound_check;
+  int high_prio;
 
 	if(num_tasks > (OS_AVAIL_TASKS-1))
 	{
@@ -60,12 +63,14 @@ int task_create(task_t* tasks  __attribute__((unused)), size_t num_tasks  __attr
 
     
 
-   // sched_init(Have to initialize the idle task here);
-    // Maybe mutexes also.
 
 
 
     allocate_tasks(&tasks,num_tasks);
+    high_prio = highest_prio();
+
+    printf("Highest priority is %d\n", (int)high_prio);
+
 
 	    
 
