@@ -1,0 +1,32 @@
+/home/sjayasan/lab-18342/lab4/lab4/kernel/sched/ctx_switch.o:  \
+ /home/sjayasan/lab-18342/lab4/lab4/kernel/sched/ctx_switch.c \
+  /home/sjayasan/lab-18342/lab4/lab4/kernel/include/types.h \
+  /home/sjayasan/lab-18342/lab4/lab4/kernel/include/assert.h \
+  /home/sjayasan/lab-18342/lab4/lab4/uboot/include/exports.h \
+  /home/sjayasan/lab-18342/lab4/lab4/kernel/include/stdarg.h \
+  /home/sjayasan/lab-18342/lab4/lab4/uboot/include/_exports.h \
+  /home/sjayasan/lab-18342/lab4/lab4/kernel/include/config.h \
+  /home/sjayasan/lab-18342/lab4/lab4/kernel/include/kernel.h \
+  /home/sjayasan/lab-18342/lab4/lab4/kernel/sched/sched_i.h \
+  /home/sjayasan/lab-18342/lab4/lab4/kernel/include/sched.h \
+  /home/sjayasan/lab-18342/lab4/lab4/kernel/include/task.h
+
+/home/sjayasan/lab-18342/lab4/lab4/kernel/include/types.h:
+
+/home/sjayasan/lab-18342/lab4/lab4/kernel/include/assert.h:
+
+/home/sjayasan/lab-18342/lab4/lab4/uboot/include/exports.h:
+
+/home/sjayasan/lab-18342/lab4/lab4/kernel/include/stdarg.h:
+
+/home/sjayasan/lab-18342/lab4/lab4/uboot/include/_exports.h:
+
+/home/sjayasan/lab-18342/lab4/lab4/kernel/include/config.h:
+
+/home/sjayasan/lab-18342/lab4/lab4/kernel/include/kernel.h:
+
+/home/sjayasan/lab-18342/lab4/lab4/kernel/sched/sched_i.h:
+
+/home/sjayasan/lab-18342/lab4/lab4/kernel/include/sched.h:
+
+/home/sjayasan/lab-18342/lab4/lab4/kernel/include/task.h:

@@ -1,0 +1,8 @@
+/home/sjayasan/lab-18342/lab4/lab4/tasks/libc/swi/sleep.o:  \
+ /home/sjayasan/lab-18342/lab4/lab4/tasks/libc/swi/sleep.S \
+  /home/sjayasan/lab-18342/lab4/lab4/tasks/libc/include/asm.h \
+  /home/sjayasan/lab-18342/lab4/lab4/tasks/libc/include/bits/swi.h
+
+/home/sjayasan/lab-18342/lab4/lab4/tasks/libc/include/asm.h:
+
+/home/sjayasan/lab-18342/lab4/lab4/tasks/libc/include/bits/swi.h:

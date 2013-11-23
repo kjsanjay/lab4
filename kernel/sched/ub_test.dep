@@ -1,0 +1,14 @@
+/home/sjayasan/lab-18342/lab4/lab4/kernel/sched/ub_test.o:  \
+ /home/sjayasan/lab-18342/lab4/lab4/kernel/sched/ub_test.c \
+  /home/sjayasan/lab-18342/lab4/lab4/kernel/include/sched.h \
+  /home/sjayasan/lab-18342/lab4/lab4/kernel/include/task.h \
+  /home/sjayasan/lab-18342/lab4/lab4/kernel/include/types.h \
+  /home/sjayasan/lab-18342/lab4/lab4/kernel/include/config.h
+
+/home/sjayasan/lab-18342/lab4/lab4/kernel/include/sched.h:
+
+/home/sjayasan/lab-18342/lab4/lab4/kernel/include/task.h:
+
+/home/sjayasan/lab-18342/lab4/lab4/kernel/include/types.h:
+
+/home/sjayasan/lab-18342/lab4/lab4/kernel/include/config.h:

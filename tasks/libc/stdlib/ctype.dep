@@ -1,0 +1,8 @@
+/home/sjayasan/lab-18342/lab4/lab4/tasks/libc/stdlib/ctype.o:  \
+ /home/sjayasan/lab-18342/lab4/lab4/tasks/libc/stdlib/ctype.c \
+  /home/sjayasan/lab-18342/lab4/lab4/tasks/libc/include/ctype.h \
+  /home/sjayasan/lab-18342/lab4/lab4/tasks/libc/include/inline.h
+
+/home/sjayasan/lab-18342/lab4/lab4/tasks/libc/include/ctype.h:
+
+/home/sjayasan/lab-18342/lab4/lab4/tasks/libc/include/inline.h:

@@ -1,0 +1,11 @@
+/home/sjayasan/lab-18342/lab4/lab4/tasks/libc/stdlib/atoi.o:  \
+ /home/sjayasan/lab-18342/lab4/lab4/tasks/libc/stdlib/atoi.c \
+  /home/sjayasan/lab-18342/lab4/lab4/tasks/libc/include/stdlib.h \
+  /home/sjayasan/lab-18342/lab4/lab4/tasks/libc/include/ctype.h \
+  /home/sjayasan/lab-18342/lab4/lab4/tasks/libc/include/inline.h
+
+/home/sjayasan/lab-18342/lab4/lab4/tasks/libc/include/stdlib.h:
+
+/home/sjayasan/lab-18342/lab4/lab4/tasks/libc/include/ctype.h:
+
+/home/sjayasan/lab-18342/lab4/lab4/tasks/libc/include/inline.h:
