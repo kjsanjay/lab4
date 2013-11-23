@@ -121,8 +121,6 @@ uint8_t highest_prio(void)
     x = prio_unmap_table[run_bits[y]];
     prio = (y << 3) + x;
     return prio;
-
-
 }
 
 
