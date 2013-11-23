@@ -108,23 +108,24 @@ void runqueue_add(tcb_t* tcb  __attribute__((unused)), uint8_t prio  __attribute
 tcb_t* runqueue_remove(uint8_t prio  __attribute__((unused)))
 {
 
-        uint8_t ostcby,ostcbx;
-        tcb_t *ret_tcb;
-        
+    uint8_t ostcby,ostcbx;
+    tcb_t *ret_tcb;
+    
 
-        ostcby = prio >> 3; 
-        ostcbx = prio & 0x07;
+    ostcby = prio >> 3; 
+    ostcbx = prio & 0x07;
 
 
-        if(run_bits[ostcby] == 0){ // Have to do this so that group run bits are not modified when there is 
-            //something else in that group.
+    if(run_bits[ostcby] == 0)
+    { // Have to do this so that group run bits are not modified when there is 
+        //something else in that group.
         group_run_bits &= ~(0x1 << ostcby);
-        }
-        run_bits[ostcby] &= ~(0x1 << ostcbx);
-        
-        ret_tcb = run_list[prio];
+    }
+    run_bits[ostcby] &= ~(0x1 << ostcbx);
+    
+    ret_tcb = run_list[prio];
 
-        run_list[prio] = NULL;
+    run_list[prio] = NULL;
 
 	return (ret_tcb); // fix this; dummy return to prevent warning messages	
 }
