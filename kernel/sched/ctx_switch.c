@@ -88,11 +88,6 @@ void dispatch_sleep(void)
 
 	ctx_switch_full((void*) next_tcb->context,(void*) curr_tcb->context);
 
-
-	
-
-
-
 }
 
 /**

@@ -41,6 +41,12 @@ FUNC(launch_task)
 /* r0 points to the target context, r1 to the current context. */
 /* add your code to perform a full context switch */
 FUNC(ctx_switch_full)
+	
+//Regs pushed into stack
+	stmfd sp!,{r2,r3}
+	stmia r1,{r4-r11,sp,lr}^
+
+	ldmdb r0,{r4-r11,sp,lr}
 
 
 
