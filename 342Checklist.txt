@@ -5,20 +5,20 @@ C,T, etc are not zero.
 2)
 
 
-mutex_create
-_lock
-_unlock
-dispatch_init
-dispatch_save
-dispatch_nosave
-dispatch_sleep
-ctx_switch_full
-ctx_switch_half
-assign_schedule
-task_create
-event_wait
-dev_wait
-dev_update
+mutex_create - partial
+_lock     - Partial
+_unlock - not done
+dispatch_init - not done
+dispatch_save - not done
+dispatch_nosave - partial
+dispatch_sleep  - partial
+ctx_switch_full  - partial
+ctx_switch_half  - partial
+assign_schedule - not done
+task_create  - partial
+event_wait  - partial
+dev_wait   - partial 
+dev_update	- partial
 
 Major work: context_sw, sched.c,return
 

@@ -38,6 +38,8 @@ void dispatch_init(tcb_t* idle __attribute__((unused)))
 {
 	
 
+
+
 	printf("Coming to dispatch_init\n");
 	
 }
@@ -53,6 +55,22 @@ void dispatch_init(tcb_t* idle __attribute__((unused)))
  */
 void dispatch_save(void)
 {
+	tcb_t* curr_tcb = get_cur_tcb();
+	tcb_t* next_tcb;
+	uint8_t curr_task_prio;
+	uint8_t next_highest_prio;
+
+	curr_task_prio = get_cur_prio();
+    runqueue_remove(curr_task_prio);
+
+	next_highest_prio = highest_prio();
+	next_tcb = _get_runList_tcb(next_highest_prio);
+
+	ctx_switch_full((volatile void*) &next_tcb->context,(volatile void*) &curr_tcb->context);
+
+
+
+
 	
 }
 
