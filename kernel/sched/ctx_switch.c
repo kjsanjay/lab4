@@ -23,11 +23,6 @@ static __attribute__((unused)) tcb_t* cur_tcb; /* use this if needed */
 extern uint8_t highest_prio();
 extern tcb_t* runqueue_remove(uint8_t);
 
-extern void ctx_switch_full(volatile void* next_ctx, volatile void* cur_ctx);
-extern void ctx_switch_half(volatile void* next_ctx);
-
-
-
 
 
 

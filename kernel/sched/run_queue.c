@@ -159,3 +159,11 @@ void print_run_queue()
         }
         
 }
+
+tcb_t* _get_runList_tcb(int prio)
+{
+    return (tcb_t *)run_list[prio];
+
+
+
+}
