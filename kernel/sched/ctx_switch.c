@@ -83,7 +83,7 @@ void dispatch_sleep(void)
 	runqueue_remove(curr_task_prio);
 
 	next_highest_prio = highest_prio();
-	// next_tcb = run_list[next_highest_prio];
+	next_tcb = _get_runList_tcb(next_highest_prio);
 
 	ctx_switch_full((volatile void*) &next_tcb->context,(volatile void*) &curr_tcb->context);
 

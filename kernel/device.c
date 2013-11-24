@@ -15,7 +15,7 @@
 #include <arm/reg.h>
 #include <arm/psr.h>
 #include <arm/exception.h>
-
+#include <kernel_consts.h>
 /**
  * @brief Fake device maintainence structure.
  * Since our tasks are periodic, we can represent 
