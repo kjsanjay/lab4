@@ -24,6 +24,7 @@
 #endif
 
 mutex_t gtMutex[OS_NUM_MUTEX];
+void add_to_mutex_sleep(tcb_t* mutex_tcb,tcb_t *current_tcb);
 
 void mutex_init()
 {
@@ -68,9 +69,10 @@ int mutex_create(void)
 
 int mutex_lock(int mutex)
 {
-	tcb_t* cur_task=get_cur_tcb();
+	tcb_t* current_tcb=get_cur_tcb();
+	mutex_t *mutex_ref=&gtMutex[mutex];
 	
-	if(gtMutex[mutex].bAvailable==FALSE)
+	if(mutex_ref->bAvailable==FALSE)
 	{
 		if(mutex < 0 || mutex > OS_NUM_MUTEX)
 		{
@@ -78,38 +80,35 @@ int mutex_lock(int mutex)
 			return -EINVAL;
 		}
 		//Check for deadlock. if currecnt task is already holding
-		else if(gtMutex[mutex].pHolding_Tcb==cur_task)
+		else if(mutex_ref->pHolding_Tcb==current_tcb)
 		{
 			return -EDEADLOCK;
 
 		}
 		else
 		{
-			if(gtMutex[mutex].bLock==1)
-			{	//Mutex unavailable
+			if(mutex_ref->bLock==1)
+			{	//Mutex is already locked
 				//Remove from run queue & add to sleep of mutex
 				//Wait for mutex to be available
-				while(gtMutex[mutex].bLock==1)
-				{
-					dispatch_sleep();
+			
+				//Add task to mutexes sleep queue
+				add_to_mutex_sleep(mutex_ref->pSleep_queue,current_tcb);
 
-					
-				}
+				
+				//Removes task from runqueue & context s\w
+				dispatch_sleep();
+				//Returns only after context switched-in
+				mutex_ref->bLock=1;
+				mutex_ref->pHolding_Tcb=current_tcb;
 
 			}
 			else
 			{	//Mutex available
-				gtMutex[mutex].bLock=1;
-				gtMutex[mutex].pHolding_Tcb=get_cur_tcb();
-				
-
+				mutex_ref->bLock=1;
+				mutex_ref->pHolding_Tcb=current_tcb;
 			}
-			
-
-
-
 		}
-
 	}
 	else
 	{ //User has not created the mutex
@@ -117,21 +116,39 @@ int mutex_lock(int mutex)
 		return -EINVAL;
 
 	}
-
-
-	
 	return 0;
-
-
-	//printf("coming to mutex_lock in mutex.c and value is: %d\n", mutex);
-	//return 1; // fix this to return the correct value
 }
 
 int mutex_unlock(int mutex)
 {
+	
 	printf("coming to mutex_unlock and value is: %d \n", mutex);
 	
 	return 0;
 	//return 1; // fix this to return the correct value
+}
+
+
+
+void add_to_mutex_sleep(tcb_t* mutex_tcb,tcb_t *current_tcb)
+{
+	
+	while(mutex_tcb!=NULL)
+	{
+		if(mutex_tcb->sleep_queue==NULL)
+			break;
+		else
+			mutex_tcb=mutex_tcb->sleep_queue;
+
+	}
+
+	if(mutex_tcb==NULL)
+		mutex_tcb=current_tcb;
+	else
+	{
+		mutex_tcb->sleep_queue=current_tcb;
+		current_tcb->sleep_queue=NULL;
+	}
+
 }
 
