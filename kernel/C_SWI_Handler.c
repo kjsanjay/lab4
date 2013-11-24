@@ -103,6 +103,12 @@ void C_SWI_Handler(int swi_num, unsigned* param)
 
 		break;
 
+		case EVENT_WAIT:
+
+
+		event_wait((int) param[0]);
+
+		break;
 
 
 		default:

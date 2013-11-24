@@ -17,8 +17,11 @@ Date: Nov 10, 2013
 #include <arm/timer.h>
 #include <arm/reg.h>
 
-#include <kernel_consts.h>
+#include "kernel_consts.h"
 
+#include <device.h>
+// We need to call dev_update in device.c with fresh time tick each 
+// time timer isr is called.
 
 extern volatile unsigned long kernel_up_time;
 extern unsigned int TIMER_SLICE;
@@ -38,7 +41,11 @@ void irq_handler()
 		osmr_ms=OSTMR_FREQ/TIMER_SLICE;
 		new_osmr=reg_read(OSTMR_OSMR_ADDR(0))+osmr_ms;
 		reg_write(OSTMR_OSMR_ADDR(0),new_osmr);
+
+
 		kernel_up_time++;
+        // defined in device.c
+		dev_update(kernel_up_time*TIMER_RES); // sending default timer ticks into specified timer res
 		//Clear bit in status register
 		reg_set(OSTMR_OSSR_ADDR,OSTMR_OSSR_M0);
 
@@ -46,3 +53,5 @@ void irq_handler()
 	}
 
 }
+
+
