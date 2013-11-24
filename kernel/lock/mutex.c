@@ -69,63 +69,117 @@ int mutex_create(void)
 
 int mutex_lock(int mutex)
 {
-	tcb_t* current_tcb=get_cur_tcb();
-	mutex_t *mutex_ref=&gtMutex[mutex];
+	tcb_t* current_tcb;
+	mutex_t *mutex_ref;
+	disable_interrupts();
 	
-	if(mutex_ref->bAvailable==FALSE)
+	if(mutex < 0 || mutex > OS_NUM_MUTEX)
 	{
-		if(mutex < 0 || mutex > OS_NUM_MUTEX)
-		{
-			printf("Invalid Mutex\n");
-			return -EINVAL;
-		}
-		//Check for deadlock. if currecnt task is already holding
-		else if(mutex_ref->pHolding_Tcb==current_tcb)
-		{
-			return -EDEADLOCK;
-
-		}
-		else
-		{
-			if(mutex_ref->bLock==1)
-			{	//Mutex is already locked
-				//Remove from run queue & add to sleep of mutex
-				//Wait for mutex to be available
-			
-				//Add task to mutexes sleep queue
-				add_to_mutex_sleep(mutex_ref->pSleep_queue,current_tcb);
-
-				
-				//Removes task from runqueue & context s\w
-				dispatch_sleep();
-				//Returns only after context switched-in
-				mutex_ref->bLock=1;
-				mutex_ref->pHolding_Tcb=current_tcb;
-
-			}
-			else
-			{	//Mutex available
-				mutex_ref->bLock=1;
-				mutex_ref->pHolding_Tcb=current_tcb;
-			}
-		}
-	}
-	else
-	{ //User has not created the mutex
-		printf("User has not created this mutex\n");
+		printf("Invalid Mutex\n");
+		enable_interrupts();
 		return -EINVAL;
+	}
+
+	
+	mutex_ref=&gtMutex[mutex];
+
+	if(mutex_ref->bAvailable==TRUE)
+	{
+		printf("User has not created this mutex\n");
+		enable_interrupts();
+		return -EINVAL;
+	}
+	
+	current_tcb=get_cur_tcb();
+	//Check for deadlock. if current task is already holding
+	if(mutex_ref->pHolding_Tcb==current_tcb)
+	{
+		printf("deadlock!!\n");
+		enable_interrupts();
+		return -EDEADLOCK;
 
 	}
+	
+
+	if(mutex_ref->bLock==1)
+	{	//Mutex is already locked
+		//Remove from run queue & add to sleep of mutex
+		//Wait for mutex to be available
+	
+		//Add task to mutexes sleep queue
+		add_to_mutex_sleep(mutex_ref->pSleep_queue,current_tcb);
+		
+		//Removes task from runqueue & context s\w
+		dispatch_sleep();
+		//Returns only after context switched-in
+	
+	}
+	
+		mutex_ref->bLock=1;
+		mutex_ref->pHolding_Tcb=current_tcb;
+	enable_interrupts();
 	return 0;
 }
 
 int mutex_unlock(int mutex)
 {
+	tcb_t* current_tcb,*next_tcb;
+	mutex_t *mutex_ref;
+	disable_interrupts();
+
+	if(mutex < 0 || mutex > OS_NUM_MUTEX)
+	{
+		printf("Invalid Mutex\n");
+		enable_interrupts();
+		return -EINVAL;
+	}
 	
-	printf("coming to mutex_unlock and value is: %d \n", mutex);
+	mutex_ref=&gtMutex[mutex];
+
+	if(mutex_ref->bAvailable==TRUE)
+	{
+		printf("User has not created this mutex\n");
+		enable_interrupts();
+		return -EINVAL;
+	}
+	current_tcb=get_cur_tcb();
 	
-	return 0;
-	//return 1; // fix this to return the correct value
+	if(mutex_ref->pHolding_Tcb!=current_tcb)
+	{
+		printf("Current task does not hold mutex.\n");
+		enable_interrupts();
+		return -EPERM;
+	}
+
+	if(mutex_ref->bLock==0)
+	{//Mutex is already unlocked
+
+		printf("Mutex already unlocked.\n");
+
+	}
+	else
+	{ //Already acquired mutex
+		mutex_ref->bLock=0;
+		mutex_ref->pHolding_Tcb=NULL;
+
+		if(mutex_ref->pSleep_queue!=NULL)
+		{// A task is waiting for the mutex
+			next_tcb=mutex_ref->pSleep_queue;
+			
+			mutex_ref->pSleep_queue=(mutex_ref->pSleep_queue)->sleep_queue;
+
+			mutex_ref->pHolding_Tcb=next_tcb;
+			next_tcb->sleep_queue=NULL;
+			mutex_ref->bLock=1;
+			runqueue_add(next_tcb,next_tcb->cur_prio);
+
+		}
+
+	}
+
+	enable_interrupts();
+	return 0;	
+
 }
 
 
