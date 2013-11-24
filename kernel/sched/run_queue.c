@@ -160,7 +160,7 @@ void print_run_queue()
         
 }
 
-tcb_t* _get_runList_tcb(int prio)
+tcb_t* _get_runList_tcb(uint8_t prio)
 {
     return (tcb_t *)run_list[prio];
 

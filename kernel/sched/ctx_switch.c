@@ -22,6 +22,8 @@ static __attribute__((unused)) tcb_t* cur_tcb; /* use this if needed */
 
 extern uint8_t highest_prio();
 extern tcb_t* runqueue_remove(uint8_t);
+extern tcb_t* _get_runList_tcb(uint8_t prio);
+
 
 
 
@@ -71,6 +73,7 @@ void dispatch_nosave(void)
 	runqueue_remove(curr_task_prio);
 
 	next_highest_prio = highest_prio();
+	next_tcb = _get_runList_tcb(next_highest_prio);
 
 	ctx_switch_half((volatile void*) &next_tcb->context);
 	
