@@ -24,6 +24,7 @@
 #endif
 
 mutex_t gtMutex[OS_NUM_MUTEX];
+void add_to_mutex_sleep(tcb_t* mutex_tcb,tcb_t *current_tcb);
 
 void mutex_init()
 {
@@ -90,19 +91,16 @@ int mutex_lock(int mutex)
 			{	//Mutex is already locked
 				//Remove from run queue & add to sleep of mutex
 				//Wait for mutex to be available
+			
+				//Add task to mutexes sleep queue
+				add_to_mutex_sleep(mutex_ref->pSleep_queue,current_tcb);
+
 				
-					//Add task to mutexes sleep queue
-					current_tcb->sleep_queue=mutex_ref->pSleep_queue;
-					mutex_ref->pSleep_queue=current_tcb;
-					
-					//Removes task from runqueue & context s\w
-					dispatch_sleep();
-					//Returns only after context switched-in
-					mutex_ref->bLock=1;
-					mutex_ref->pHolding_Tcb=current_tcb;
-					
-					
-				
+				//Removes task from runqueue & context s\w
+				dispatch_sleep();
+				//Returns only after context switched-in
+				mutex_ref->bLock=1;
+				mutex_ref->pHolding_Tcb=current_tcb;
 
 			}
 			else
@@ -123,9 +121,34 @@ int mutex_lock(int mutex)
 
 int mutex_unlock(int mutex)
 {
+	
 	printf("coming to mutex_unlock and value is: %d \n", mutex);
 	
 	return 0;
 	//return 1; // fix this to return the correct value
+}
+
+
+
+void add_to_mutex_sleep(tcb_t* mutex_tcb,tcb_t *current_tcb)
+{
+	
+	while(mutex_tcb!=NULL)
+	{
+		if(mutex_tcb->sleep_queue==NULL)
+			break;
+		else
+			mutex_tcb=mutex_tcb->sleep_queue;
+
+	}
+
+	if(mutex_tcb==NULL)
+		mutex_tcb=current_tcb;
+	else
+	{
+		mutex_tcb->sleep_queue=current_tcb;
+		current_tcb->sleep_queue=NULL;
+	}
+
 }
 
