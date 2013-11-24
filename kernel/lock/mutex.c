@@ -30,38 +30,94 @@ void mutex_init()
 	for(i=0;i<OS_NUM_MUTEX;i++) {
 
 		gtMutex[i].bAvailable = TRUE;
-		gtMutex[i].pHolding_Tcb = 0x0;
+		gtMutex[i].pHolding_Tcb = NULL;
 		gtMutex[i].bLock = FALSE;
-		gtMutex[i].pSleep_queue = 0x0;
+		gtMutex[i].pSleep_queue = NULL;
 
 	}
 
 
 }
 
+//Creats a mutex & returns its index
+
 int mutex_create(void)
 {
 	int i;
+	
 
-	for(i=0;i<OS_NUM_MUTEX;i++){
-		if(gtMutex[i].bAvailable == TRUE) break;
+	for(i=0;i<OS_NUM_MUTEX;i++)
+	{
+		if(gtMutex[i].bAvailable == TRUE) 
+			break;
 	}
 
-	if(i == OS_NUM_MUTEX) return -ENOMEM;
+	
+	if(i == OS_NUM_MUTEX)
+	{
+		printf("Mutex limit exceeded\n");
+		return -ENOMEM;
+	}
+		
 
 	gtMutex[i].bAvailable = FALSE;
 	return i;
 	
 }
 
-int mutex_lock(int mutex  __attribute__((unused)))
+int mutex_lock(int mutex)
 {
+	tcb_t* cur_task=get_cur_tcb();
+	
+	if(gtMutex[mutex].bAvailable==FALSE)
+	{
+		if(mutex < 0 || mutex > OS_NUM_MUTEX)
+		{
+			printf("Invalid Mutex\n");
+			return -EINVAL;
+		}
+		//Check for deadlock. if currecnt task is already holding
+		else if(gtMutex[mutex].pHolding_Tcb==cur_task)
+		{
+			return -EDEADLOCK;
 
-	if(mutex < 0 || mutex > OS_NUM_MUTEX){
-		printf("Invalid Mutex\n");
+		}
+		else
+		{
+			if(gtMutex[mutex].bLock==1)
+			{	//Mutex unavailable
+				//Remove from run queue & add to sleep of mutex
+				//Wait for mutex to be available
+				while(gtMutex[mutex].bLock==1)
+				{
+					
+
+					
+				}
+
+			}
+			else
+			{	//Mutex available
+				gtMutex[mutex].bLock=1;
+				gtMutex[mutex].pHolding_Tcb=cur_task();
+
+			}
+			
+
+
+
+		}
+
+	}
+	else
+	{ //User has not created the mutex
+		printf("User has not created this mutex\n");
 		return -EINVAL;
+
 	}
 
+
+	
 	return 0;
 
 
@@ -69,7 +125,7 @@ int mutex_lock(int mutex  __attribute__((unused)))
 	//return 1; // fix this to return the correct value
 }
 
-int mutex_unlock(int mutex  __attribute__((unused)))
+int mutex_unlock(int mutex)
 {
 	printf("coming to mutex_unlock and value is: %d \n", mutex);
 	

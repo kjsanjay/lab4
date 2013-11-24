@@ -66,6 +66,8 @@ int task_create(task_t* tasks  __attribute__((unused)), size_t num_tasks  __attr
     //sort_tasks(tasks,num_tasks);
     //TODO: UB Test
 
+    mutex_init();
+    
     allocate_tasks(&tasks,num_tasks);
 
     sched_init(&idle_task);
