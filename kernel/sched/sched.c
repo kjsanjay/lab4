@@ -76,7 +76,7 @@ static void __attribute__((unused)) idle(void)
 void allocate_tasks(task_t** tasks  __attribute__((unused)), size_t num_tasks  __attribute__((unused)))
 {
 	unsigned int i;
-
+	task_t idle_task;
 	//Initialize the runqueue
 	//Clears run_list,run_bit & group_run_bits
 	runqueue_init();
@@ -106,6 +106,9 @@ void allocate_tasks(task_t** tasks  __attribute__((unused)), size_t num_tasks  _
 		runqueue_add(&system_tcb[i], system_tcb[i].native_prio);
 	}
 
+	
+    sched_init(&idle_task);
+    dispatch_init(&system_tcb[IDLE_PRIO]);
 
 	print_run_queue();
 

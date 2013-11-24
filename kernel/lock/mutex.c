@@ -17,6 +17,7 @@
 #include <bits/errno.h>
 #include <arm/psr.h>
 #include <arm/exception.h>
+#include <kernel_consts.h>
 #include <exports.h> // <= Remove before submission
 #ifdef DEBUG_MUTEX
 #include <exports.h> // temp
@@ -90,7 +91,7 @@ int mutex_lock(int mutex)
 				//Wait for mutex to be available
 				while(gtMutex[mutex].bLock==1)
 				{
-					
+					dispatch_sleep();
 
 					
 				}
@@ -99,7 +100,8 @@ int mutex_lock(int mutex)
 			else
 			{	//Mutex available
 				gtMutex[mutex].bLock=1;
-				gtMutex[mutex].pHolding_Tcb=cur_task();
+				gtMutex[mutex].pHolding_Tcb=get_cur_tcb();
+				
 
 			}
 			

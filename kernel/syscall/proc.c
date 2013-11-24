@@ -15,6 +15,7 @@
 #include <kernel.h>
 #include <syscall.h>
 #include <sched.h>
+#include <lock.h>
 
 #include <arm/reg.h>
 #include <arm/psr.h>
@@ -43,7 +44,7 @@ int task_create(task_t* tasks  __attribute__((unused)), size_t num_tasks  __attr
   int bound_check;
   int high_prio;
   tcb_t* removed_task;
-  task_t idle_task;
+  
 
 	if(num_tasks > (OS_AVAIL_TASKS-1))
 	{
@@ -69,9 +70,7 @@ int task_create(task_t* tasks  __attribute__((unused)), size_t num_tasks  __attr
     mutex_init();
     
     allocate_tasks(&tasks,num_tasks);
-
-    sched_init(&idle_task);
-    dispatch_init(&system_tcb[IDLE_PRIO]);
+    
     high_prio = highest_prio();
 
     printf("Highest priority is %d\n", (int)high_prio);
