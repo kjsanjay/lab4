@@ -11,6 +11,7 @@
 
 #include <kernel.h>
 #include <config.h>
+#include <sched.h>
 #include "sched_i.h"
 #include <kernel_consts.h>
 #include <arm/reg.h>
@@ -26,7 +27,6 @@ void setup_task_context(task_t *task, tcb_t *tcb, uint8_t prio);
 extern void runqueue_add(tcb_t*, uint8_t);
 extern void runqueue_init();
 extern void print_run_queue();
-extern void dispatch_init(tcb_t*);
 
 
 
@@ -109,6 +109,7 @@ void allocate_tasks(task_t** tasks  __attribute__((unused)), size_t num_tasks  _
 	
     sched_init(&idle_task);
     dispatch_init(&system_tcb[IDLE_PRIO]);
+    dispatch_nosave();
 
 	print_run_queue();
 

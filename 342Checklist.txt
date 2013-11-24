@@ -9,7 +9,7 @@ mutex_create - partial
 _lock     - Partial
 _unlock - not done
 dispatch_init - not done
-dispatch_save - not done
+dispatch_save - partial
 dispatch_nosave - partial
 dispatch_sleep  - partial
 ctx_switch_full  - partial
