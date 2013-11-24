@@ -67,6 +67,19 @@ void dispatch_save(void)
  */
 void dispatch_nosave(void)
 {
+	tcb_t* next_tcb;
+
+	uint8_t curr_task_prio;
+	uint8_t next_highest_prio;
+
+	curr_task_prio = get_cur_prio();
+	runqueue_remove(curr_task_prio);
+
+	next_highest_prio = highest_prio();
+
+	ctx_switch_half((volatile void*) &next_tcb->context);
+	
+
 
 }
 
@@ -85,7 +98,7 @@ void dispatch_sleep(void)
 	uint8_t next_highest_prio;
 
 	curr_task_prio = get_cur_prio();
-	runqueue_remove(curr_task_prio);
+    runqueue_remove(curr_task_prio);
 
 	next_highest_prio = highest_prio();
 	// next_tcb = run_list[next_highest_prio];
