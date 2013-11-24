@@ -1,0 +1,25 @@
+Lab-4
+1) Task validation : check if all tasks have different stack positions.
+C,T, etc are not zero.
+
+2)
+
+
+mutex_create
+_lock
+_unlock
+dispatch_init
+dispatch_save
+dispatch_nosave
+dispatch_sleep
+ctx_switch_full
+ctx_switch_half
+assign_schedule
+task_create
+event_wait
+dev_wait
+dev_update
+
+Major work: context_sw, sched.c,return
+
+git branch new_branch_name 96ac027bd18148f46f658a24b9bea70ed3996ee2
