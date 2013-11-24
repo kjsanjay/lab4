@@ -84,16 +84,16 @@ void runqueue_init(void)
 void runqueue_add(tcb_t* tcb  __attribute__((unused)), uint8_t prio  __attribute__((unused)))
 {
 
-	 	uint8_t ostcby,ostcbx;
+ 	uint8_t ostcby,ostcbx;
 
-        ostcby = prio >> 3; 
-		ostcbx = prio & 0x07;
+    ostcby = prio >> 3; 
+	ostcbx = prio & 0x07;
 
-		// Sets the group
-		 group_run_bits |= (0x1 << ostcby);
-		 // Sets the corresponding lines that were set in group
-		 run_bits[ostcby] |= (0x1 << ostcbx);
- 		 run_list[prio] = tcb;
+	// Sets the group
+	group_run_bits |= (0x1 << ostcby);
+	 // Sets the corresponding lines that were set in group
+	run_bits[ostcby] |= (0x1 << ostcbx);
+	run_list[prio] = tcb;
 
 }
 

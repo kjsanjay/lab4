@@ -23,8 +23,11 @@ static __attribute__((unused)) tcb_t* cur_tcb; /* use this if needed */
 extern uint8_t highest_prio();
 extern tcb_t* runqueue_remove(uint8_t);
 
-extern void ctx_switch_full(void* ,void* );
-extern static tcb_t* run_list(uint8_t);
+extern void ctx_switch_full(volatile void* next_ctx, volatile void* cur_ctx);
+extern void ctx_switch_half(volatile void* next_ctx);
+
+
+
 
 
 
@@ -36,6 +39,7 @@ extern static tcb_t* run_list(uint8_t);
  */
 void dispatch_init(tcb_t* idle __attribute__((unused)))
 {
+	
 
 	printf("Coming to dispatch_init\n");
 	
@@ -80,13 +84,13 @@ void dispatch_sleep(void)
 	uint8_t curr_task_prio;
 	uint8_t next_highest_prio;
 
-	curr_task_prio = get_cur_prio;
+	curr_task_prio = get_cur_prio();
 	runqueue_remove(curr_task_prio);
 
 	next_highest_prio = highest_prio();
-	next_tcb = run_list[next_highest_prio];
+	// next_tcb = run_list[next_highest_prio];
 
-	ctx_switch_full((void*) next_tcb->context,(void*) curr_tcb->context);
+	ctx_switch_full((volatile void*) &next_tcb->context,(volatile void*) &curr_tcb->context);
 
 }
 

@@ -18,10 +18,12 @@ int main(void)
 {
     unsigned int a;
     a=read(STDIN_FILENO, str, 20);
+    putchar(a);
 //    printf("\nret2=%lu\n",a);
    // printf("\nret3=%d\n",sizeof(str));
     write(STDOUT_FILENO, str, a);
+    
 //    printf("\njj");
-	//write(STDOUT_FILENO, hello, sizeof(hello) - 1);
+	write(STDOUT_FILENO, hello, sizeof(hello) - 1);
 	return 0;
 }

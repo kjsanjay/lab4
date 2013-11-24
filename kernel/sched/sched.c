@@ -78,35 +78,36 @@ void allocate_tasks(task_t** tasks  __attribute__((unused)), size_t num_tasks  _
 	unsigned int i;
 
 	//Initialize the runqueue
+	//Clears run_list,run_bit & group_run_bits
 	runqueue_init();
 	printf("Runqueue has been initialized\n");
 
 
 
 	task_t *a_tasks = *tasks;
+
+	//tasks are sorted as per T or priority order
 	sort_tasks(*tasks,num_tasks);
 
-	for(i=0;i<num_tasks;i++){
-		//Tasks will start from 0, edit the tcb.
-	setup_task_context(&a_tasks[i], &system_tcb[i+1], i+1);
+	//Tasks will start from 0, edit the tcb.
+	for(i=0;i<num_tasks;i++)
+	{
+		
+		setup_task_context(&a_tasks[i], &system_tcb[i+1], i+1);
 
 	}
 
-	sched_init(&a_tasks[IDLE_PRIO]);
-
-	for(i=1;i<=num_tasks;i++){
-		// Adding the alloted tasks onto runqueue
+	
+	// Adding the alloted tasks onto runqueue
 		// Start from 1 as opposed to 0, because of setup_task_context
+	for(i=1;i<=num_tasks;i++)
+	{
+		
 		runqueue_add(&system_tcb[i], system_tcb[i].native_prio);
 	}
 
 
 	print_run_queue();
-
-
-	dispatch_init(&system_tcb[IDLE_PRIO]);
-
-
 
 }
 
@@ -127,6 +128,7 @@ void setup_task_context(task_t *task, tcb_t *tcb, uint8_t prio)
     //printf("after setting up context %u %u %u sp is %u \n", (tcb->context).r4, (tcb->context).r5, (tcb->context).r6, (tcb->context).sp);
     tcb->holds_lock = 0;
     tcb->sleep_queue = NULL;
+    //Set-up kstack ??
 }
 
 

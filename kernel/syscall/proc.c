@@ -43,6 +43,7 @@ int task_create(task_t* tasks  __attribute__((unused)), size_t num_tasks  __attr
   int bound_check;
   int high_prio;
   tcb_t* removed_task;
+  task_t idle_task;
 
 	if(num_tasks > (OS_AVAIL_TASKS-1))
 	{
@@ -51,12 +52,12 @@ int task_create(task_t* tasks  __attribute__((unused)), size_t num_tasks  __attr
 	}  
 
 
-	bound_check = valid_addr(tasks, (num_tasks * sizeof(task_t)), USR_START_ADDR, USR_END_ADDR);
-    if(bound_check == 0) 
-    {
-            printf("incorrect address of tasks passed to task create\n");
-            return -EFAULT;
-    }
+  bound_check = valid_addr(tasks, (num_tasks * sizeof(task_t)), USR_START_ADDR, USR_END_ADDR);
+  if(bound_check == 0) 
+  {
+      printf("incorrect address of tasks passed to task create\n");
+      return -EFAULT;
+  }
 	
 	//TODO: check_task_validity();
 
@@ -65,13 +66,10 @@ int task_create(task_t* tasks  __attribute__((unused)), size_t num_tasks  __attr
     //sort_tasks(tasks,num_tasks);
     //TODO: UB Test
 
-
-    
-
-
-
-
     allocate_tasks(&tasks,num_tasks);
+
+    sched_init(&idle_task);
+    dispatch_init(&system_tcb[IDLE_PRIO]);
     high_prio = highest_prio();
 
     printf("Highest priority is %d\n", (int)high_prio);
