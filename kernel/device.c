@@ -8,7 +8,6 @@
 
 #include <types.h>
 #include <assert.h>
-#include <kernel_consts.h>
 
 #include <task.h>
 #include <sched.h>
@@ -41,18 +40,23 @@ typedef struct dev dev_t;
 const unsigned long dev_freq[NUM_DEVICES] = {100, 200, 500, 50};
 static dev_t devices[NUM_DEVICES];
 
+ int init_time=0; // Needed to find the duration of sleep
+
+
+// kernel_up_time needed from time.c to know the number of ticks for a device to sleep.
+
 /**
  * @brief Initialize the sleep queues and match values for all devices.
  */
 void dev_init(void)
 {
-	int i;
-	for(i=0;i<NUM_DEVICES;i++) 
-	{
-		devices[i].sleep_queue = NULL;
-		devices[i].next_match = dev_freq[i];
-
+// Initialize all the devices and their tcb
+int m;
+	for(m = 0; m < NUM_DEVICES; m++) {
+		devices[m].next_match = dev_freq[m];
+		devices[m].sleep_queue = NULL;
 	}
+
 }
 
 
@@ -64,9 +68,16 @@ void dev_init(void)
  */
 void dev_wait(unsigned int dev __attribute__((unused)))
 {
-	
-	
 
+  // Find the calling task tcb and put it to sleep queue.
+ // defined in ctx_switch.c
+	tcb_t *current_tcb = get_cur_tcb();
+
+	current_tcb->sleep_queue = devices[dev].sleep_queue;
+	devices[dev].sleep_queue = current_tcb;
+    // Function in CTX_SWITCH.c  removes the highest priority(currently running task) from 
+    // run queue and does a context switch with next runnable task
+	dispatch_sleep();
 	
 }
 
@@ -78,8 +89,34 @@ void dev_wait(unsigned int dev __attribute__((unused)))
  * interrupt corresponded to the interrupt frequency of a device, this 
  * function should ensure that the task is made ready to run 
  */
+
+// The function is called from c_irq_handler.c
+ // The void irq_handler() function calls dev_update
 void dev_update(unsigned long millis __attribute__((unused)))
 {
-	
+
+	int i;
+	tcb_t *tmp;;
+
+// Find the task in the sleep queue which was sleeping
+// if the sleep duration matches with the number of ticks, then wake it up and add to run queue.	
+	for(i = 0; i < NUM_DEVICES; i++) {
+	 	if(devices[i].next_match == millis) {
+			while(devices[i].sleep_queue != NULL) {
+				tmp = devices[i].sleep_queue; // find the device which was sleeping
+				runqueue_add(tmp,tmp->cur_prio); // add it to run queue
+				devices[i].sleep_queue = tmp->sleep_queue; // remember the task which had caused event_wait.
+				tmp->sleep_queue = NULL; // device is not asleep anymore.
+			}
+
+			// Check for integer overflow of the next_match counter.
+			if((devices[i].next_match + dev_freq[i]) < devices[i].next_match) {
+				printf("overflow occured in next_match %d \n", i);
+				
+			}
+			devices[i].next_match += dev_freq[i]; // update the next frequency value for sleeping
+		}
+	}
+
 }
 
