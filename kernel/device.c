@@ -51,8 +51,9 @@ static dev_t devices[NUM_DEVICES];
 void dev_init(void)
 {
 // Initialize all the devices and their tcb
-int m;
-	for(m = 0; m < NUM_DEVICES; m++) {
+	int m;
+	for(m = 0; m < NUM_DEVICES; m++) 
+	{
 		devices[m].next_match = dev_freq[m];
 		devices[m].sleep_queue = NULL;
 	}
@@ -100,9 +101,12 @@ void dev_update(unsigned long millis __attribute__((unused)))
 
 // Find the task in the sleep queue which was sleeping
 // if the sleep duration matches with the number of ticks, then wake it up and add to run queue.	
-	for(i = 0; i < NUM_DEVICES; i++) {
-	 	if(devices[i].next_match == millis) {
-			while(devices[i].sleep_queue != NULL) {
+	for(i = 0; i < NUM_DEVICES; i++)
+	{
+	 	if(devices[i].next_match == millis)
+	 	{
+			while(devices[i].sleep_queue != NULL)
+			{
 				tmp = devices[i].sleep_queue; // find the device which was sleeping
 				runqueue_add(tmp,tmp->cur_prio); // add it to run queue
 				devices[i].sleep_queue = tmp->sleep_queue; // remember the task which had caused event_wait.
@@ -110,7 +114,8 @@ void dev_update(unsigned long millis __attribute__((unused)))
 			}
 
 			// Check for integer overflow of the next_match counter.
-			if((devices[i].next_match + dev_freq[i]) < devices[i].next_match) {
+			if((devices[i].next_match + dev_freq[i]) < devices[i].next_match) 
+			{
 				printf("overflow occured in next_match %d \n", i);
 				
 			}

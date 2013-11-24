@@ -34,11 +34,7 @@ inline void restore_OldSWI(void);
 inline void restore_OldIRQ(void);
 
 //Global variables
-int TIMER_SLICE=ONE_SEC/TIMER_RES;
- 
-//IRQ stack in bss section
-int irq_stack[IRQ_STACK_SIZE];
-// 
+
 //Stores old SWI & IRQ handler instructions
 unsigned int old_SWIinstr1 = 0;
 unsigned int old_SWIinstr2 = 0;
@@ -178,7 +174,7 @@ void init_timer()
 {
 	
 	kernel_up_time=0;
-	int osmr_ms=OSTMR_FREQ/TIMER_SLICE;
+	int osmr_ms=OSTMR_FREQ/OS_TICKS_PER_SEC;
 	reg_write(OSTMR_OSCR_ADDR,0x0);
 	
 	reg_write(OSTMR_OSMR_ADDR(0),osmr_ms);

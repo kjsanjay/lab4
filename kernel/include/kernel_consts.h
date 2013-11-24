@@ -38,6 +38,6 @@ Date: Nov 10, 2013
 #define USER_APP_LOCATION 0xa0000000
 #define USER_STACK_TOP 0xa3000000
 #define IRQ_STACK_SIZE 1024 //number of words
-#define TIMER_RES 10 //ms
+// #define TIMER_RES 10 //ms <= moved to config.h
 
 

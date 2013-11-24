@@ -63,10 +63,8 @@ void C_SWI_Handler(int swi_num, unsigned* param)
 		break;
 
 		case TIME_SWI:
-			//i=time_syscall();
 			param[0] = time_syscall();
 			
-			//printf("%d\n",(int)param[0] );			
 		break;
 
 		case SLEEP_SWI:

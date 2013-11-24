@@ -22,7 +22,7 @@ extern volatile unsigned long kernel_up_time;
 
 unsigned long time_syscall(void)
 {
-	return(kernel_up_time*TIMER_RES);
+	return(kernel_up_time*OS_TIMER_RESOLUTION);
  //return 1; /* remove this line after adding your code here */	
 }
 
@@ -37,7 +37,7 @@ unsigned long time_syscall(void)
 void sleep_syscall(unsigned long millis  __attribute__((unused)))
 {
 	 		 sleep_counter=millis;
-			 sleep_counter=kernel_up_time + (sleep_counter/TIMER_RES);
+			 sleep_counter=kernel_up_time + (sleep_counter/OS_TIMER_RESOLUTION);
 			
 			 while(kernel_up_time < sleep_counter);
 			 return;
