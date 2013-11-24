@@ -42,10 +42,10 @@ FUNC(launch_task)
 /* add your code to perform a full context switch */
 FUNC(ctx_switch_full)
 	
-//Regs pushed into stack
-	stmfd sp!,{r2,r3}
-	stmia r1,{r4-r11,sp,lr}^
+	//Pushing context of current task
+	stmia r1,{r4-r11,sp,lr}
 
+	//Restoring context of next task
 	ldmdb r0,{r4-r11,sp,lr}
 
 
@@ -53,3 +53,5 @@ FUNC(ctx_switch_full)
 /*add your code to perform a half context switch */	
 FUNC(ctx_switch_half)
 
+	//Restoring context of next task
+	ldmdb r0,{r4-r11,sp,lr}
