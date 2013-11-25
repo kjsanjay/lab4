@@ -16,15 +16,13 @@
 #include <arm/reg.h>
 #include <arm/interrupt.h>
 #include <arm/timer.h>
- #include <arm/exception.h>
+#include <arm/exception.h>
 #include <kernel_consts.h>
+#include <lock.h>
 
 void init_IRQregs();
 void init_timer();
-extern void setupIRQ_Stack();
 
-extern void enable_interrupts();
-extern void disable_interrupts();
 
 extern int new_SWI_Handler();
 extern int irq_wrapper();
@@ -102,7 +100,7 @@ int kmain(int argc __attribute__((unused)), char** argv  __attribute__((unused))
 	enable_interrupts();
 
 	init_timer();
-	
+	mutex_init();
 
 	// Switch to user mode & load user program
 	k_r0=switchToUserMode(argc,argv);

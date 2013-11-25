@@ -23,12 +23,13 @@
 
 new_SWI_Handler:
     
-    LDR r7,=global_data
-    LDR r8,[r7]
+    
     STMFD sp,{sp,lr}^
     SUB sp,sp,#8
     SUB sp,sp,#4
     STMFD sp!, {r0-r12,lr}
+    LDR r2,=global_data
+    LDR r8,[r2]
     MRS r2,spsr @ the user mode cpsr
     STR r2, [sp, #14*4] @ push the cpsr_user into stack to pop after executing SWI
     MRS r2,cpsr
