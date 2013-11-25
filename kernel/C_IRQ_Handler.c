@@ -34,8 +34,7 @@ void irq_handler()
 {
 	unsigned long osmr_ms;
 	unsigned long new_osmr;
-	// tcb_t *highest_prio_tcb;
-	// tcb_t *current_tcb=get_cur_tcb();
+	
 	//Checking if OSMR0 - is matched - 26th bit
 	unsigned int os_icpr=reg_read(INT_ICIP_ADDR);
 	//Check bit for interrupt from correct source

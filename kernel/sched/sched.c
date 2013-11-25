@@ -43,8 +43,9 @@ void sched_init(task_t* main_task)
  	idle_context->r4 = (uint32_t)main_task->lambda;
     idle_context->r5 = (uint32_t)main_task->data;
     idle_context->r6 = (uint32_t)main_task->stack_pos;
+    idle_context->r8 = (uint32_t)global_data;
     idle_context->sp = (void *)(idle_tcb->kstack_high);
-    idle_context->lr = (void *)idle;
+    idle_context->lr = (void *)&idle;
 
 	idle_tcb->native_prio = IDLE_PRIO;
     idle_tcb->cur_prio = IDLE_PRIO;
@@ -63,7 +64,8 @@ void sched_init(task_t* main_task)
  
 static void __attribute__((unused)) idle(void)
 {
-	 enable_interrupts();
+	 printf("Idle\n");
+     enable_interrupts();
 	 while(1);
 }
 
@@ -129,11 +131,7 @@ void setup_task_context(task_t *task, tcb_t *tcb, uint8_t prio)
     task_context->r4 = (uint32_t)task->lambda;
     task_context->r5 = (uint32_t)task->data;
     task_context->r6 = (uint32_t)task->stack_pos;
-    task_context->r7 = 0;
-    task_context->r8 = 0;
-    task_context->r9 = 0;
-    task_context->r10 = 0;
-    task_context->r11 = 0;
+    task_context->r8 = (uint32_t)global_data;
     task_context->sp = (void *)(tcb->kstack_high);
     task_context->lr = launch_task;
     tcb->holds_lock = 0;

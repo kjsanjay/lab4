@@ -107,12 +107,14 @@ void runqueue_add(tcb_t* tcb, uint8_t prio)
  *
  * This function needs to be externally synchronized.
  */
-tcb_t* runqueue_remove(uint8_t prio  __attribute__((unused)))
+tcb_t* runqueue_remove(uint8_t prio)
 {
 
     uint8_t ostcby,ostcbx;
-    tcb_t *ret_tcb;
-    
+    tcb_t* return_tcb;    
+
+    return_tcb= run_list[prio];
+    run_list[prio] = 0;
 
     ostcby = prio >> 3; 
     ostcbx = prio & 0x07;
@@ -125,11 +127,8 @@ tcb_t* runqueue_remove(uint8_t prio  __attribute__((unused)))
     }
     run_bits[ostcby] &= ~(0x1 << ostcbx);
     
-    ret_tcb = &system_tcb[prio];
+    return return_tcb;
 
-    run_list[prio] = NULL;
-
-	return ret_tcb;
 }
 
 /**
