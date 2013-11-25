@@ -35,7 +35,7 @@ extern void exitProgram(int);
 extern unsigned int globalsp_svc;
 extern volatile unsigned long kernel_up_time;
 
-unsigned long C_SWI_Handler(int swi_num, unsigned* param)
+int C_SWI_Handler(int swi_num, unsigned* param)
 {
 	//param[0] - fd/ exit code
 	//param[1] - string
@@ -69,14 +69,14 @@ unsigned long C_SWI_Handler(int swi_num, unsigned* param)
 
 		case SLEEP_SWI:
 
-		 sleep_syscall(param[0]);
-			
+		sleep_syscall(param[0]);
+		param[0] = 0;
 
 		break;
 
 		case CREATE_SWI:
 
-		task_create((task_t *)param[0],(size_t)param[1]);
+		param[0]=task_create((task_t *)param[0],(size_t)param[1]);
 
 		//printf("Coming to create swi in C_SWI_Handler\n");
 
@@ -84,27 +84,27 @@ unsigned long C_SWI_Handler(int swi_num, unsigned* param)
 
 		case MUTEX_CREATE:
 
-		mutex_create();
+		param[0]=mutex_create();
 
 		break;
 
 		case MUTEX_LOCK:
 
-		mutex_lock((int) param[0]);
+		param[0]=mutex_lock((int) param[0]);
 
 		break;
 
 		case MUTEX_UNLOCK:
 
 
-		mutex_unlock((int) param[0]);
+		param[0]=mutex_unlock((int) param[0]);
 
 		break;
 
 		case EVENT_WAIT:
 
 
-		event_wait((int) param[0]);
+		param[0]=event_wait((int) param[0]);
 
 		break;
 
