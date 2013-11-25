@@ -23,8 +23,8 @@
 
 new_SWI_Handler:
     
-    LDMFD sp,{r8}
-    
+    LDR r7,=global_data
+    LDR r8,[r7]
     STMFD sp,{sp,lr}^
     SUB sp,sp,#8
     SUB sp,sp,#4

@@ -31,8 +31,6 @@ switchToUserMode:
 	@ returns to line in main after the function
 
 	
-	STMFD sp!,{r8,lr}
-		
 		@Store sp
 	LDR r7,=globalsp_svc
 	STR sp,[r7]
