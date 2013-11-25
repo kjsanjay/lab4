@@ -60,32 +60,32 @@ void fun4(void* str)
 
 int main(int argc, char** argv)
 {
-	task_t tasks[2];
+	task_t tasks[4];
 	tasks[0].lambda = fun1;
 	tasks[0].data = (void*)'@';
 	tasks[0].stack_pos = (void*)0xa2000000;
 	tasks[0].C = 1;
-	tasks[0].T = PERIOD_DEV0;
+	tasks[0].T = 1;
 
 	tasks[1].lambda = fun2;
 	tasks[1].data = (void*)'<';
 	tasks[1].stack_pos = (void*)0xa1000000;
 	tasks[1].C = 1;
-	tasks[1].T = PERIOD_DEV1;
+	tasks[1].T = 2;
 
-	tasks[2].lambda = fun3;
-	tasks[2].data = (void*)'&';
-	tasks[2].stack_pos = (void*)0xa1200000;
-	tasks[2].C = 1;
-	tasks[2].T = PERIOD_DEV1;
+	// tasks[2].lambda = fun3;
+	// tasks[2].data = (void*)'&';
+	// tasks[2].stack_pos = (void*)0xa1200000;
+	// tasks[2].C = 1;
+	// tasks[2].T = 3;
 
-	tasks[3].lambda = fun4;
-	tasks[3].data = (void*)'@';
-	tasks[3].stack_pos = (void*)0xa1700000;
-	tasks[3].C = 1;
-	tasks[3].T = PERIOD_DEV1;
+	// tasks[3].lambda = fun4;
+	// tasks[3].data = (void*)'*';
+	// tasks[3].stack_pos = (void*)0xa1700000;
+	// tasks[3].C = 1;
+	// tasks[3].T = 4;
 
-	task_create(tasks, 4);
+	task_create(tasks, 2);
 	argc=argc; /* remove compiler warning */
 	argv[0]=argv[0]; /* remove compiler warning */
 

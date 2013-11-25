@@ -24,6 +24,7 @@
 new_SWI_Handler:
     
     
+    
     STMFD sp,{sp,lr}^
     SUB sp,sp,#8
     SUB sp,sp,#4
@@ -41,6 +42,7 @@ new_SWI_Handler:
     bic r0,r0,#CLR_SWI_NUM
     BL C_SWI_Handler
     LDR r2, [sp, #14*4]
+    ORR r2,r2,#0xC0     @ Disable IRQ
     MSR spsr, r2
     ADD sp,sp,#4    @so that value of r0 is not clobbered
     LDMFD sp!, {r1-r12,lr}

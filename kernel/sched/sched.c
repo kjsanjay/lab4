@@ -90,7 +90,7 @@ void allocate_tasks(task_t** tasks, size_t num_tasks)
 	//Initialize the runqueue
 	//Clears run_list,run_bit & group_run_bits
 	runqueue_init();
-	printf("Runqueue initialized\n");
+	// printf("Runqueue initialized\n");
 
 	//Tasks will start from 0, edit the tcb.
 	for(i=0;i<num_tasks;i++)

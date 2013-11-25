@@ -24,7 +24,7 @@
 #include <exports.h>
 #endif
 
-static tcb_t* cur_tcb; /* use this if needed */
+static volatile tcb_t* cur_tcb; /* use this if needed */
 
 
 /**
@@ -38,7 +38,7 @@ void dispatch_init(tcb_t* idle __attribute__((unused)))
 	
 	cur_tcb = idle;
 	// print_run_queue();
-	printf("Coming to dispatch_init\n");
+	// printf("Coming to dispatch_init\n");
 	disable_interrupts();
 	dispatch_nosave();
 }
@@ -107,7 +107,7 @@ void dispatch_nosave(void)
 		if(next_task_prio!=IDLE_PRIO)
 			cur_tcb=runqueue_remove(next_task_prio);
 
-		printf("cur_tcb:%d\n",cur_tcb->cur_prio);
+		// printf("cur_tcb:%d\n",cur_tcb->cur_prio);
 		
 
 		ctx_switch_half((volatile void*) &cur_tcb->context);
@@ -128,29 +128,19 @@ void dispatch_nosave(void)
 void dispatch_sleep(void)
 {
 	
-	tcb_t* current_tcb=NULL;
-	tcb_t* next_tcb;
-	uint8_t curr_task_prio;
 	uint8_t next_task_prio;
+	tcb_t*current_tcb=get_cur_tcb();
 
-	curr_task_prio = get_cur_prio();
+	next_task_prio=highest_prio();
 
-	if(curr_task_prio!=IDLE_PRIO)
-		current_tcb=runqueue_remove(curr_task_prio);
+	if(next_task_prio!=IDLE_PRIO)
+		cur_tcb=runqueue_remove(next_task_prio);
+	else
+		cur_tcb=&system_tcb[IDLE_PRIO];
 
+	// printf("cur_tcb:%d\n",cur_tcb->cur_prio );
 
-	next_task_prio = highest_prio();
-	
-	
-	next_tcb = &system_tcb[next_task_prio];
-		
-	cur_tcb=next_tcb;
-	// if(next_task_prio!=IDLE_PRIO)
-	// 	cur_tcb=runqueue_remove(next_task_prio);
-	// else
-	// 	cur_tcb=&system_tcb[IDLE_PRIO];
-
-	ctx_switch_full((volatile void*) &next_tcb->context,
+	ctx_switch_full((volatile void*) &cur_tcb->context,
 		(volatile void*) &current_tcb->context);
 
 }
