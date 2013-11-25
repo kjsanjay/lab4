@@ -14,6 +14,16 @@ Date: Nov 10, 2013
 #include <bits/fileno.h>
 #include <bits/errno.h>
 #include <bits/swi.h>
+
+#include <types.h>
+#include <assert.h>
+#include <task.h>
+#include <sched.h>
+#include <device.h>
+#include <arm/reg.h>
+#include <arm/psr.h>
+#include <arm/exception.h>
+
 #include <exports.h>
 #include <syscall.h>
 #include <kernel_consts.h>
@@ -27,12 +37,9 @@ Date: Nov 10, 2013
 #define CARRIAGE_RETURN		13
 
 
-extern inline void restore_OldSWI(void);
-extern unsigned int getKernTime();
-extern void exitProgram(int);
 
 
-extern unsigned int globalsp_svc;
+
 extern volatile unsigned long kernel_up_time;
 
 int C_SWI_Handler(int swi_num, unsigned* param)
@@ -58,7 +65,7 @@ int C_SWI_Handler(int swi_num, unsigned* param)
 
 		//Write sycall
 		case WRITE_SWI:
-		//	i=write_syscall(param[0],(void*)param[1],param[2]);
+		
 			param[0]=write_syscall(param[0],(void*)param[1],param[2]);
 		break;
 
@@ -83,13 +90,13 @@ int C_SWI_Handler(int swi_num, unsigned* param)
 		break;
 
 		case MUTEX_CREATE:
-
+		disable_interrupts();
 		param[0]=mutex_create();
 
 		break;
 
 		case MUTEX_LOCK:
-
+		disable_interrupts();
 		param[0]=mutex_lock((int) param[0]);
 
 		break;

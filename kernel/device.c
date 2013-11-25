@@ -8,7 +8,6 @@
 
 #include <types.h>
 #include <assert.h>
-
 #include <task.h>
 #include <sched.h>
 #include <device.h>
@@ -70,14 +69,15 @@ void dev_init(void)
 void dev_wait(unsigned int dev __attribute__((unused)))
 {
 
-  // Find the calling task tcb and put it to sleep queue.
- // defined in ctx_switch.c
+  	// Find the calling task tcb and put it to sleep queue.
+ 	// defined in ctx_switch.c
 	tcb_t *current_tcb = get_cur_tcb();
 
 	current_tcb->sleep_queue = devices[dev].sleep_queue;
 	devices[dev].sleep_queue = current_tcb;
     // Function in CTX_SWITCH.c  removes the highest priority(currently running task) from 
     // run queue and does a context switch with next runnable task
+	disable_interrupts();
 	dispatch_sleep();
 	
 }

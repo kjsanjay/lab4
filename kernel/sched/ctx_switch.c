@@ -13,6 +13,12 @@
 #include <config.h>
 #include <kernel.h>
 #include "sched_i.h"
+#include <task.h>
+#include <device.h>
+#include <arm/reg.h>
+#include <arm/psr.h>
+#include <arm/exception.h>
+#include <kernel_consts.h>
 
 #ifdef DEBUG_MUTEX
 #include <exports.h>
@@ -32,8 +38,8 @@ void dispatch_init(tcb_t* idle __attribute__((unused)))
 	
 	cur_tcb = idle;
 	print_run_queue();
-	//dispatch_nosave();
 	printf("Coming to dispatch_init\n");
+	disable_interrupts();
 	dispatch_nosave();
 }
 
@@ -123,10 +129,10 @@ void dispatch_sleep(void)
 	
 	tcb_t* current_tcb;
 	tcb_t* next_tcb;
-	uint8_t curr_task_prio;
+	// uint8_t curr_task_prio;
 	uint8_t next_task_prio;
 
-	curr_task_prio = get_cur_prio();
+	// curr_task_prio = get_cur_prio();
 
 	next_task_prio = highest_prio();
 	
@@ -134,7 +140,7 @@ void dispatch_sleep(void)
 	
 	current_tcb = get_cur_tcb();
 	next_tcb = &system_tcb[next_task_prio];
-	runqueue_add(current_tcb, curr_task_prio);
+	// runqueue_add(current_tcb, curr_task_prio);
 	
 	cur_tcb=runqueue_remove(next_task_prio);
 

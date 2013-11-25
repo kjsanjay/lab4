@@ -52,15 +52,10 @@ void irq_handler()
 		reg_set(OSTMR_OSSR_ADDR,OSTMR_OSSR_M0);
 
 
-        // defined in device.c
-		dev_update(kernel_up_time*OS_TIMER_RESOLUTION); // sending default timer ticks into specified timer res
-		// Pre-emption handled by de=update
-		// highest_prio_tcb=_get_runList_tcb(highest_prio());
-		// if(current_tcb != highest_prio_tcb)
-		// {
-		// 	dispatch_save();
-
-		// }
+        
+		// sending default timer ticks into specified timer res
+		dev_update(kernel_up_time*OS_TIMER_RESOLUTION); 
+		
 
 
 	}

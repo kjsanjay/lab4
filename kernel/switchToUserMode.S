@@ -18,7 +18,7 @@
 	.text
 	.align	2
 		
-	.global globalsp_svc
+
 
 
 	.global switchToUserMode
@@ -31,9 +31,6 @@ switchToUserMode:
 	@ returns to line in main after the function
 
 	
-		@Store sp
-	LDR r7,=globalsp_svc
-	STR sp,[r7]
 		@Switching to User mode
 		@ enable IRQ & disable FIQ 
 	mrs r3,CPSR
@@ -64,7 +61,4 @@ loop1:
 	
 	ldr pc, =USER_APP_LOCATION
 	@ BX r7
-
-globalsp_svc:
-	.word globalsp_svc
 

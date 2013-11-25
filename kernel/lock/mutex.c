@@ -71,12 +71,10 @@ int mutex_lock(int mutex)
 {
 	tcb_t* current_tcb;
 	mutex_t *mutex_ref;
-	disable_interrupts();
 	
 	if(mutex < 0 || mutex > OS_NUM_MUTEX)
 	{
 		printf("Invalid Mutex\n");
-		enable_interrupts();
 		return -EINVAL;
 	}
 
@@ -86,7 +84,6 @@ int mutex_lock(int mutex)
 	if(mutex_ref->bAvailable==TRUE)
 	{
 		printf("User has not created this mutex\n");
-		enable_interrupts();
 		return -EINVAL;
 	}
 	
@@ -95,7 +92,6 @@ int mutex_lock(int mutex)
 	if(mutex_ref->pHolding_Tcb==current_tcb)
 	{
 		printf("deadlock!!\n");
-		enable_interrupts();
 		return -EDEADLOCK;
 
 	}
@@ -110,13 +106,14 @@ int mutex_lock(int mutex)
 		add_to_mutex_sleep(mutex_ref->pSleep_queue,current_tcb);
 		
 		//Removes task from runqueue & context s\w
+		
 		dispatch_sleep();
 		//Returns only after context switched-in
 	
 	}
 	
-		mutex_ref->bLock=1;
-		mutex_ref->pHolding_Tcb=current_tcb;
+	mutex_ref->bLock=1;
+	mutex_ref->pHolding_Tcb=current_tcb;
 	enable_interrupts();
 	return 0;
 }
@@ -130,7 +127,7 @@ int mutex_unlock(int mutex)
 	if(mutex < 0 || mutex > OS_NUM_MUTEX)
 	{
 		printf("Invalid Mutex\n");
-		enable_interrupts();
+		// enable_interrupts();
 		return -EINVAL;
 	}
 	
@@ -139,7 +136,7 @@ int mutex_unlock(int mutex)
 	if(mutex_ref->bAvailable==TRUE)
 	{
 		printf("User has not created this mutex\n");
-		enable_interrupts();
+		// enable_interrupts();
 		return -EINVAL;
 	}
 	current_tcb=get_cur_tcb();
@@ -147,7 +144,7 @@ int mutex_unlock(int mutex)
 	if(mutex_ref->pHolding_Tcb!=current_tcb)
 	{
 		printf("Current task does not hold mutex.\n");
-		enable_interrupts();
+		// enable_interrupts();
 		return -EPERM;
 	}
 
@@ -174,6 +171,7 @@ int mutex_unlock(int mutex)
 			runqueue_add(next_tcb,next_tcb->cur_prio);
 
 		}
+		
 		dispatch_save();
 	}
 
