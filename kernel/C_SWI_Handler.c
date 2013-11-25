@@ -35,7 +35,7 @@ extern void exitProgram(int);
 extern unsigned int globalsp_svc;
 extern volatile unsigned long kernel_up_time;
 
-void C_SWI_Handler(int swi_num, unsigned* param)
+unsigned long C_SWI_Handler(int swi_num, unsigned* param)
 {
 	//param[0] - fd/ exit code
 	//param[1] - string
@@ -118,9 +118,6 @@ void C_SWI_Handler(int swi_num, unsigned* param)
 
 	}
 	
-	//printf("ret at end: %d\n",i);
-	//	putchar(i);
-	// param[0]=i;
-	//printf("return value: %d", param[0]);
-	return; //param[0];
-	}
+	return param[0];
+	
+}
