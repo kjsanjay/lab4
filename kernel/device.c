@@ -103,7 +103,7 @@ void dev_update(unsigned long millis __attribute__((unused)))
 // if the sleep duration matches with the number of ticks, then wake it up and add to run queue.	
 	for(i = 0; i < NUM_DEVICES; i++)
 	{
-	 	if(devices[i].next_match == millis)
+	 	if(devices[i].next_match <= millis)
 	 	{
 			while(devices[i].sleep_queue != NULL)
 			{
@@ -119,6 +119,7 @@ void dev_update(unsigned long millis __attribute__((unused)))
 				printf("overflow occured in next_match %d \n", i);
 				
 			}
+			
 			devices[i].next_match += dev_freq[i]; // update the next frequency value for sleeping
 		}
 	}

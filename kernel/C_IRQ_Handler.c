@@ -16,6 +16,9 @@ Date: Nov 10, 2013
 #include <arm/interrupt.h>
 #include <arm/timer.h>
 #include <arm/reg.h>
+#include <task.h>
+#include <lock.h>
+#include <sched.h>
 
 #include <kernel_consts.h>
 
@@ -31,6 +34,8 @@ void irq_handler()
 {
 	unsigned long osmr_ms;
 	unsigned long new_osmr;
+	tcb_t *highest_prio_tcb;
+	tcb_t *current_tcb=get_cur_tcb();
 	//Checking if OSMR0 - is matched - 26th bit
 	unsigned int os_icpr=reg_read(INT_ICIP_ADDR);
 	//Check bit for interrupt from correct source
@@ -42,13 +47,19 @@ void irq_handler()
 		osmr_ms=OSTMR_FREQ/OS_TICKS_PER_SEC;
 		new_osmr=reg_read(OSTMR_OSMR_ADDR(0))+osmr_ms;
 		reg_write(OSTMR_OSMR_ADDR(0),new_osmr);
-
-
 		kernel_up_time++;
+        //Clear bit in status register
+		reg_set(OSTMR_OSSR_ADDR,OSTMR_OSSR_M0);
+
+
         // defined in device.c
 		dev_update(kernel_up_time*OS_TIMER_RESOLUTION); // sending default timer ticks into specified timer res
-		//Clear bit in status register
-		reg_set(OSTMR_OSSR_ADDR,OSTMR_OSSR_M0);
+		highest_prio_tcb=_get_runList_tcb(highest_prio());
+		if(current_tcb != highest_prio_tcb)
+		{
+			dispatch_save();
+
+		}
 
 
 	}

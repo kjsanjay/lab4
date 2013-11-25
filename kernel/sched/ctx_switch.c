@@ -37,9 +37,11 @@ extern tcb_t* _get_runList_tcb(uint8_t prio);
 void dispatch_init(tcb_t* idle __attribute__((unused)))
 {
 	
-	// tcb_t* curr_tcb;
-	// curr_tcb = idle;
-
+	
+	cur_tcb = idle;
+	//dispatch_nosave();
+	ctx_switch_half((volatile void*) &cur_tcb->context);
+	
 	printf("Coming to dispatch_init\n");
 
 
@@ -57,7 +59,7 @@ void dispatch_init(tcb_t* idle __attribute__((unused)))
  */
 void dispatch_save(void)
 {
-	tcb_t* curr_tcb = get_cur_tcb();
+	tcb_t* current_tcb = get_cur_tcb();
 	tcb_t* next_tcb;
 	uint8_t curr_task_prio;
 	uint8_t next_highest_prio;
@@ -67,9 +69,11 @@ void dispatch_save(void)
 
 	next_highest_prio = highest_prio();
 	next_tcb = _get_runList_tcb(next_highest_prio);
-	runqueue_add(curr_tcb, curr_task_prio);
+	runqueue_add(current_tcb, curr_task_prio);
 
-	ctx_switch_full((volatile void*) &next_tcb->context,(volatile void*) &curr_tcb->context);
+	cur_tcb=next_tcb;
+
+	ctx_switch_full((volatile void*) &next_tcb->context,(volatile void*) &current_tcb->context);
 
 
 
@@ -100,9 +104,8 @@ void dispatch_nosave(void)
 
 	printf("Context switching curr prio and next prio is : %d  %d\n", (int)curr_task_prio, (int)next_highest_prio);
 
+	cur_tcb=next_tcb;
 	ctx_switch_half((volatile void*) &next_tcb->context);
-
-
 	
 	printf("Coming to dispatch_nosave after getting context switched\n");
 
@@ -118,7 +121,7 @@ void dispatch_nosave(void)
  */
 void dispatch_sleep(void)
 {
-	tcb_t* curr_tcb = get_cur_tcb();
+	tcb_t* current_tcb = get_cur_tcb();
 	tcb_t* next_tcb;
 	uint8_t curr_task_prio;
 	uint8_t next_highest_prio;
@@ -129,7 +132,8 @@ void dispatch_sleep(void)
 	next_highest_prio = highest_prio();
 	next_tcb = _get_runList_tcb(next_highest_prio);
 
-	ctx_switch_full((volatile void*) &next_tcb->context,(volatile void*) &curr_tcb->context);
+	cur_tcb=next_tcb;
+	ctx_switch_full((volatile void*) &next_tcb->context,(volatile void*) &current_tcb->context);
 
 }
 
