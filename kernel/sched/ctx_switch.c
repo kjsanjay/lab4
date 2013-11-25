@@ -89,7 +89,7 @@ void dispatch_nosave(void)
 	next_task_prio = highest_prio();
 
 	
-	if(next_task_prio>curr_task_prio)
+	if(next_task_prio<curr_task_prio)
 	{
 		if(curr_task_prio!=IDLE_PRIO)
 		{
