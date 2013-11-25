@@ -86,7 +86,7 @@ void dispatch_save(void)
 void dispatch_nosave(void)
 {
 	tcb_t* current_tcb;
-	tcb_t* next_tcb;
+	// tcb_t* next_tcb;
 	uint8_t curr_task_prio;
 	uint8_t next_task_prio;
 
@@ -103,13 +103,15 @@ void dispatch_nosave(void)
 			runqueue_add(current_tcb, curr_task_prio);
 
 		}
-		next_tcb = &system_tcb[next_task_prio];
+		// next_tcb = &system_tcb[next_task_prio];
 		
-		if(curr_task_prio!=IDLE_PRIO)
-			cur_tcb=runqueue_remove(next_task_prio);
-		else 
-			cur_tcb=next_tcb;
-		ctx_switch_half((volatile void*) &next_tcb->context);
+		cur_tcb=runqueue_remove(next_task_prio);
+
+		// if(curr_task_prio!=IDLE_PRIO)
+			
+		// else 
+		// 	cur_tcb=next_tcb;
+		ctx_switch_half((volatile void*) &cur_tcb->context);
 	}
 
 	
@@ -142,7 +144,10 @@ void dispatch_sleep(void)
 	next_tcb = &system_tcb[next_task_prio];
 	// runqueue_add(current_tcb, curr_task_prio);
 	
-	cur_tcb=runqueue_remove(next_task_prio);
+	if(next_task_prio!=IDLE_PRIO)
+		cur_tcb=runqueue_remove(next_task_prio);
+	else
+		cur_tcb=&system_tcb[IDLE_PRIO];
 
 	ctx_switch_full((volatile void*) &next_tcb->context,
 		(volatile void*) &current_tcb->context);

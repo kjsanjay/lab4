@@ -125,11 +125,11 @@ tcb_t* runqueue_remove(uint8_t prio  __attribute__((unused)))
     }
     run_bits[ostcby] &= ~(0x1 << ostcbx);
     
-    ret_tcb = run_list[prio];
+    ret_tcb = &system_tcb[prio];
 
     run_list[prio] = NULL;
 
-	return (ret_tcb); // fix this; dummy return to prevent warning messages	
+	return ret_tcb;
 }
 
 /**
