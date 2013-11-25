@@ -42,8 +42,6 @@ extern void print_run_queue();
 int task_create(task_t* tasks  __attribute__((unused)), size_t num_tasks  __attribute__((unused)))
 {
   int bound_check;
-  // int high_prio;
-  // tcb_t* removed_task;
   
 
 	if(num_tasks > (OS_AVAIL_TASKS-1))
@@ -60,13 +58,11 @@ int task_create(task_t* tasks  __attribute__((unused)), size_t num_tasks  __attr
       return -EFAULT;
   }
 	
-	//TODO: check_task_validity();
-
-
-    //assign_schedule(&tasks,num_tasks);
-    //sort_tasks(tasks,num_tasks);
+	 //TODO: check_task_validity();
+    
     //TODO: UB Test
 
+    dev_init();
     mutex_init();
     
     allocate_tasks(&tasks,num_tasks);
