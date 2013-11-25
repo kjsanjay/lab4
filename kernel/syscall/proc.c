@@ -42,8 +42,8 @@ extern void print_run_queue();
 int task_create(task_t* tasks  __attribute__((unused)), size_t num_tasks  __attribute__((unused)))
 {
   int bound_check;
-  int high_prio;
-  tcb_t* removed_task;
+  // int high_prio;
+  // tcb_t* removed_task;
   
 
 	if(num_tasks > (OS_AVAIL_TASKS-1))
@@ -70,17 +70,6 @@ int task_create(task_t* tasks  __attribute__((unused)), size_t num_tasks  __attr
     mutex_init();
     
     allocate_tasks(&tasks,num_tasks);
-    
-    high_prio = highest_prio();
-
-    printf("Highest priority is %d\n", (int)high_prio);
-
-    removed_task = runqueue_remove(1);
-    printf("The removed runqueue task is %d\n" , (int) removed_task);
-	    
-    print_run_queue();
-
-
 
 
     return 0;
