@@ -123,6 +123,8 @@ void dev_update(unsigned long millis __attribute__((unused)))
 			devices[i].next_match += dev_freq[i]; // update the next frequency value for sleeping
 		}
 	}
+	disable_interrupts();
+	dispatch_save();
 
 }
 

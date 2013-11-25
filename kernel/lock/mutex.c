@@ -174,10 +174,10 @@ int mutex_unlock(int mutex)
 			runqueue_add(next_tcb,next_tcb->cur_prio);
 
 		}
-
+		dispatch_save();
 	}
 
-	enable_interrupts();
+	
 	return 0;	
 
 }

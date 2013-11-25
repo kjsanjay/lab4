@@ -35,6 +35,10 @@ void runqueue_add(tcb_t* tcb, uint8_t prio);
 tcb_t* runqueue_remove(uint8_t prio);
 uint8_t highest_prio(void);
 
+
+/*Helper functions*/
 tcb_t* _get_runList_tcb(uint8_t prio);
+void setup_task_context(task_t *task, tcb_t *tcb, uint8_t prio);
+void print_run_queue();
 
 #endif /* SCHED_H */

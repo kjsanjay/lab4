@@ -9,7 +9,7 @@
 
 #include <types.h>
 #include <assert.h>
-
+#include <sched.h>
 #include <config.h>
 #include <kernel.h>
 #include "sched_i.h"
@@ -19,13 +19,6 @@
 #endif
 
 static __attribute__((unused)) tcb_t* cur_tcb; /* use this if needed */
-
-extern uint8_t highest_prio();
-extern tcb_t* runqueue_remove(uint8_t);
-extern tcb_t* _get_runList_tcb(uint8_t prio);
-
-
-
 
 
 /**
@@ -37,16 +30,11 @@ extern tcb_t* _get_runList_tcb(uint8_t prio);
 void dispatch_init(tcb_t* idle __attribute__((unused)))
 {
 	
-	
 	cur_tcb = idle;
+	print_run_queue();
 	//dispatch_nosave();
 	printf("Coming to dispatch_init\n");
-	ctx_switch_half((volatile void*) &cur_tcb->context);
-	
-	
-
-
-	
+	dispatch_nosave();
 }
 
 
@@ -60,26 +48,27 @@ void dispatch_init(tcb_t* idle __attribute__((unused)))
  */
 void dispatch_save(void)
 {
-	tcb_t* current_tcb = get_cur_tcb();
+	tcb_t* current_tcb;
 	tcb_t* next_tcb;
 	uint8_t curr_task_prio;
-	uint8_t next_highest_prio;
+	uint8_t next_task_prio;
 
 	curr_task_prio = get_cur_prio();
-    runqueue_remove(curr_task_prio);
 
-	next_highest_prio = highest_prio();
-	next_tcb = _get_runList_tcb(next_highest_prio);
-	runqueue_add(current_tcb, curr_task_prio);
+	next_task_prio = highest_prio();
+	
+	if(next_task_prio<curr_task_prio)
+	{	//Higher prio
+		current_tcb = get_cur_tcb();
+		next_tcb = &system_tcb[next_task_prio];
+		runqueue_add(current_tcb, curr_task_prio);
+		
 
-	cur_tcb=next_tcb;
+		cur_tcb=runqueue_remove(next_task_prio);
 
-	ctx_switch_full((volatile void*) &next_tcb->context,(volatile void*) &current_tcb->context);
-
-
-
-
-
+		ctx_switch_full((volatile void*) &next_tcb->context,
+			(volatile void*) &current_tcb->context);
+	}
 }
 
 /**
@@ -90,25 +79,34 @@ void dispatch_save(void)
  */
 void dispatch_nosave(void)
 {
+	tcb_t* current_tcb;
 	tcb_t* next_tcb;
-
 	uint8_t curr_task_prio;
-	uint8_t next_highest_prio;
+	uint8_t next_task_prio;
 
 	curr_task_prio = get_cur_prio();
-	runqueue_remove(curr_task_prio);
 
-	next_highest_prio = highest_prio();
-	next_tcb = _get_runList_tcb(next_highest_prio);
+	next_task_prio = highest_prio();
 
-	printf("Coming to dispatch_nosave and waiting to be conext switched\n");
-
-	printf("Context switching curr prio and next prio is : %d  %d\n", (int)curr_task_prio, (int)next_highest_prio);
-
-	cur_tcb=next_tcb;
-	ctx_switch_half((volatile void*) &next_tcb->context);
 	
-	printf("Coming to dispatch_nosave after getting context switched\n");
+	if(next_task_prio>curr_task_prio)
+	{
+		if(curr_task_prio!=IDLE_PRIO)
+		{
+			current_tcb = get_cur_tcb();
+			runqueue_add(current_tcb, curr_task_prio);
+
+		}
+		next_tcb = &system_tcb[next_task_prio];
+		
+		if(curr_task_prio!=IDLE_PRIO)
+			cur_tcb=runqueue_remove(next_task_prio);
+		else 
+			cur_tcb=next_tcb;
+		ctx_switch_half((volatile void*) &next_tcb->context);
+	}
+
+	
 
 
 }
@@ -122,19 +120,26 @@ void dispatch_nosave(void)
  */
 void dispatch_sleep(void)
 {
-	tcb_t* current_tcb = get_cur_tcb();
+	
+	tcb_t* current_tcb;
 	tcb_t* next_tcb;
 	uint8_t curr_task_prio;
-	uint8_t next_highest_prio;
+	uint8_t next_task_prio;
 
 	curr_task_prio = get_cur_prio();
-    runqueue_remove(curr_task_prio);
 
-	next_highest_prio = highest_prio();
-	next_tcb = _get_runList_tcb(next_highest_prio);
+	next_task_prio = highest_prio();
+	
+	
+	
+	current_tcb = get_cur_tcb();
+	next_tcb = &system_tcb[next_task_prio];
+	runqueue_add(current_tcb, curr_task_prio);
+	
+	cur_tcb=runqueue_remove(next_task_prio);
 
-	cur_tcb=next_tcb;
-	ctx_switch_full((volatile void*) &next_tcb->context,(volatile void*) &current_tcb->context);
+	ctx_switch_full((volatile void*) &next_tcb->context,
+		(volatile void*) &current_tcb->context);
 
 }
 

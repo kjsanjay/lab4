@@ -81,7 +81,7 @@ void runqueue_init(void)
  * only requirement is that the run queue for that priority is empty.  This
  * function needs to be externally synchronized.
  */
-void runqueue_add(tcb_t* tcb  __attribute__((unused)), uint8_t prio  __attribute__((unused)))
+void runqueue_add(tcb_t* tcb, uint8_t prio)
 {
 
  	uint8_t ostcby,ostcbx;
@@ -94,6 +94,8 @@ void runqueue_add(tcb_t* tcb  __attribute__((unused)), uint8_t prio  __attribute
 	 // Sets the corresponding lines that were set in group
 	run_bits[ostcby] |= (0x1 << ostcbx);
 	run_list[prio] = tcb;
+    // printf("Added:%d %p %d\n", tcb->cur_prio, (void*)tcb->context.r4, tcb->context.r5);
+
 
 }
 
