@@ -8,7 +8,7 @@
 
 #include <types.h>
 #include <assert.h>
-
+#include <task.h>
 #include <kernel.h>
 #include <config.h>
 #include <sched.h>
@@ -34,15 +34,27 @@ extern void print_run_queue();
 void sched_init(task_t* main_task  __attribute__((unused)))
 {
 
-
+	//set-up idle task
+	tcb_t *idle_tcb =  &system_tcb[IDLE_PRIO];
+	sched_context_t *idle_context;
 
 	main_task->lambda =(task_fun_t) idle;
     main_task->data = NULL;
     main_task->stack_pos = system_tcb[IDLE_PRIO].kstack_high;
     main_task->C = 0;
     main_task->T = 0;
-	
-    setup_task_context(main_task,&system_tcb[IDLE_PRIO],IDLE_PRIO);
+
+    idle_context=&idle_tcb->context;
+ 	idle_context->r4 = (uint32_t)main_task->lambda;
+    idle_context->r5 = 0;
+    idle_context->r6 = 0;
+    idle_context->sp = (void *)(idle_tcb->kstack_high);
+    idle_context->lr =  (void *)idle;
+
+	idle_tcb->native_prio = IDLE_PRIO;
+    idle_tcb->cur_prio = IDLE_PRIO;
+    idle_tcb->holds_lock = 0;
+    idle_tcb->sleep_queue = NULL;
 
     runqueue_add(&system_tcb[IDLE_PRIO], IDLE_PRIO);
 }
@@ -107,9 +119,10 @@ void allocate_tasks(task_t** tasks  __attribute__((unused)), size_t num_tasks  _
 	}
 
 	
+    
+
     sched_init(&idle_task);
     dispatch_init(&system_tcb[IDLE_PRIO]);
-    dispatch_nosave();
 
 	print_run_queue();
 
@@ -132,7 +145,7 @@ void setup_task_context(task_t *task, tcb_t *tcb, uint8_t prio)
     //printf("after setting up context %u %u %u sp is %u \n", (tcb->context).r4, (tcb->context).r5, (tcb->context).r6, (tcb->context).sp);
     tcb->holds_lock = 0;
     tcb->sleep_queue = NULL;
-    //Set-up kstack ??
+
 }
 
 

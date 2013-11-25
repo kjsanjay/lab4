@@ -14,7 +14,7 @@ MAKEFLAGS += -rR
 # Make sure there are no name clashes.  Add new ones here if you make your own
 # tests (which I recommend you do).
 
-PACKAGES = dagger hello typo splat
+PACKAGES = dagger hello
 
 .PHONY: all package clean clobber $(PACKAGES)
 all: package kernel

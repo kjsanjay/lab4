@@ -40,9 +40,10 @@ void dispatch_init(tcb_t* idle __attribute__((unused)))
 	
 	cur_tcb = idle;
 	//dispatch_nosave();
+	printf("Coming to dispatch_init\n");
 	ctx_switch_half((volatile void*) &cur_tcb->context);
 	
-	printf("Coming to dispatch_init\n");
+	
 
 
 	

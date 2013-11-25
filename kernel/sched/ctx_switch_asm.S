@@ -46,7 +46,7 @@ FUNC(ctx_switch_full)
 	stmia r1,{r4-r11,sp,lr}
 
 	//Restoring context of next task
-	ldmia r0,{r4-r11,sp,lr}
+	ldmia r0,{r4-r11,sp,pc}
 
 
 
@@ -54,4 +54,4 @@ FUNC(ctx_switch_full)
 FUNC(ctx_switch_half)
 
 	//Restoring context of next task
-	ldmia r0,{r4-r11,sp,lr}
+	ldmia r0,{r4-r11,sp,pc}
