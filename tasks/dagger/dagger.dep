@@ -1,0 +1,23 @@
+/home/yashwant/lab4/tasks/dagger/dagger.o:  \
+ /home/yashwant/lab4/tasks/dagger/dagger.c \
+  /home/yashwant/lab4/tasks/libc/include/stdio.h \
+  /home/yashwant/lab4/tasks/libc/include/stdarg.h \
+  /home/yashwant/lab4/tasks/libc/include/sys/types.h \
+  /home/yashwant/lab4/tasks/libc/include/bits/types.h \
+  /home/yashwant/lab4/tasks/libc/include/task.h \
+  /home/yashwant/lab4/tasks/libc/include/unistd.h \
+  /home/yashwant/lab4/tasks/libc/include/bits/fileno.h
+
+/home/yashwant/lab4/tasks/libc/include/stdio.h:
+
+/home/yashwant/lab4/tasks/libc/include/stdarg.h:
+
+/home/yashwant/lab4/tasks/libc/include/sys/types.h:
+
+/home/yashwant/lab4/tasks/libc/include/bits/types.h:
+
+/home/yashwant/lab4/tasks/libc/include/task.h:
+
+/home/yashwant/lab4/tasks/libc/include/unistd.h:
+
+/home/yashwant/lab4/tasks/libc/include/bits/fileno.h:

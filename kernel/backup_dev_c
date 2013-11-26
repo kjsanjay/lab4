@@ -42,7 +42,6 @@ const unsigned long dev_freq[NUM_DEVICES] = { 100, 200, 300, 400, 500, 600, 700,
 
 
 
-
 static dev_t devices[NUM_DEVICES];
 
  int init_time=0; // Needed to find the duration of sleep

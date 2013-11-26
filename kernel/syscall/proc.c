@@ -42,14 +42,16 @@ int task_create(task_t* tasks, size_t num_tasks)
 		return -EINVAL;
 	}  
 
+
  
     if(check_task_validity(tasks,num_tasks)==0)
     {
+      //  putc('G');
         printf("Incorrect values passed to task create\n");
         return -EFAULT;
     }
 
-    
+   // putc('H');
     
     //TODO: UB Test
 
@@ -88,46 +90,38 @@ void invalid_syscall(unsigned int call_num  __attribute__((unused)))
 
 int check_task_validity(task_t* tasks,int num_tasks)
 {
-
     int i;
+    if(tasks==NULL || 
+    ((uintptr_t)&tasks < (uintptr_t)USR_START_ADDR || 
+        (uintptr_t)(&tasks) >= (uintptr_t)USR_END_ADDR))
+    {
+        return 0;
+    }
 
-    for (i = 0; i < num_tasks; ++i)
+    for (i = 0; i < num_tasks; i++)
     {
 
-        if(valid_addr(tasks[i].lambda, sizeof(void *),
-                 USR_START_ADDR, USR_END_ADDR) == 0) {
-                        return 0;
-                }
 
-                // validate stack_pos
-                if(valid_addr(tasks[i].stack_pos, sizeof(void *),
-                 USR_START_ADDR, USR_END_ADDR) == 0) {
-                        return 0;
-                }
-
-    // for (i = 0; i < num_tasks; ++i)
-    // {
-    //     if(tasks[i].lambda==NULL || 
-    //         ((uintptr_t)tasks[i].lambda < (uintptr_t)USR_START_ADDR || 
-    //             (uintptr_t)tasks[i].lambda >= (uintptr_t)USR_END_ADDR))
-    //     {
-    //         return 0;
-    //     }
-
-
-
-    //     // if(tasks[i].data==0)
-    //     //     return 0;
-
-    //     if(tasks[i].stack_pos==NULL || 
-    //         ((uintptr_t)tasks[i].stack_pos < (uintptr_t)USR_START_ADDR || 
-    //             (uintptr_t)tasks[i].stack_pos >= (uintptr_t)USR_END_ADDR))
-    //     {
-    //         return 0;
-    //     }
-
-        if(tasks[i].C==0)
+        if(tasks[i].lambda==NULL || 
+        ((uintptr_t)tasks[i].lambda < (uintptr_t)USR_START_ADDR || 
+            (uintptr_t)tasks[i].lambda >= (uintptr_t)USR_END_ADDR))
+        {
             return 0;
+        }
+       
+        // validate stack_pos
+        if(tasks[i].stack_pos==NULL || 
+            ((uintptr_t)tasks[i].stack_pos < (uintptr_t)USR_START_ADDR || 
+                (uintptr_t)tasks[i].stack_pos >= (uintptr_t)USR_END_ADDR))
+        {
+            return 0;
+        }
+
+
+        if(valid_addr(tasks[i].stack_pos, sizeof(void *),
+         USR_START_ADDR, USR_END_ADDR) == 0) {
+                return 0;
+        }
 
         if(tasks[i].T==0)
             return 0;
