@@ -21,6 +21,8 @@ Date: Nov 25, 2013
 #include <arm/psr.h>
 #include <arm/exception.h>
 #include <kernel_consts.h>
+
+// #define DEBUG
 /**
  * @brief Fake device maintainence structure.
  * Since our tasks are periodic, we can represent 
@@ -42,7 +44,9 @@ struct dev
 typedef struct dev dev_t;
 
 /* devices will be periodically signaled at the following frequencies */
-const unsigned long dev_freq[NUM_DEVICES] = {100, 200, 500, 50};
+const unsigned long dev_freq[NUM_DEVICES] = { 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300, 3400, 3500, 3600, 3700, 3800, 3900, 4000, 4100, 4200, 4300, 4400, 4500, 4600, 4700, 4800, 4900, 5000, 5100, 5200, 5300, 5400, 5500, 5600, 5700, 5800, 5900, 9000};
+
+
 static dev_t devices[NUM_DEVICES];
 
  int init_time=0; // Needed to find the duration of sleep
@@ -102,7 +106,7 @@ void dev_wait(unsigned int dev __attribute__((unused)))
 void dev_update(unsigned long millis __attribute__((unused)))
 {
 
-	int i;
+	int i,task_flag=0;
 	tcb_t *tmp;;
 
 // Find the task in the sleep queue which was sleeping
@@ -117,6 +121,7 @@ void dev_update(unsigned long millis __attribute__((unused)))
 				runqueue_add(tmp,tmp->cur_prio); // add it to run queue
 				devices[i].sleep_queue = tmp->sleep_queue; // remember the task which had caused event_wait.
 				tmp->sleep_queue = NULL; // device is not asleep anymore.
+				task_flag++;
 			}
 
 			// Check for integer overflow of the next_match counter.
@@ -129,8 +134,17 @@ void dev_update(unsigned long millis __attribute__((unused)))
 			devices[i].next_match += dev_freq[i]; // update the next frequency value for sleeping
 		}
 	}
-	disable_interrupts();
-	dispatch_save();
+	if(task_flag>0)
+	{
+		#ifdef DEBUG
+		puts("dev-task ");
+
+		#endif
+		disable_interrupts();
+		dispatch_save();
+
+	}
+	
 
 }
 

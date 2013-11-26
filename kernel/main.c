@@ -97,10 +97,10 @@ int kmain(int argc __attribute__((unused)), char** argv  __attribute__((unused))
 	*writeLoc=(unsigned int)irq_wrapper;
 
 
-    // init_IRQregs();
-	// enable_interrupts();
+    init_IRQregs();
+	enable_interrupts();
 
-	// init_timer();
+	init_timer();
 	mutex_init();
 	dev_init();
 

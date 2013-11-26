@@ -29,7 +29,7 @@ Date: Nov 25, 2013
 
 extern volatile unsigned long kernel_up_time;
 
-#define DEBUG
+// #define DEBUG
 
 void irq_handler()
 {

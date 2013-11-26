@@ -25,7 +25,7 @@ Date: Nov 25, 2013
 #include <device.h>
 
 
-#define DEBUG
+// #define DEBUG
 
 
 void sort_tasks(task_t *tasks,size_t num_tasks);
@@ -42,7 +42,7 @@ int task_create(task_t* tasks, size_t num_tasks)
 
     if(num_tasks > (OS_AVAIL_TASKS-1))
 	{
-		// printf("Too many tasks\n");
+		printf("Too many tasks\n");
          #ifdef DEBUG
         puts("Too many tasks");
 
@@ -57,7 +57,7 @@ int task_create(task_t* tasks, size_t num_tasks)
         puts(" Error_addr");
 
         #endif
-        // printf("Incorrect values passed to task create\n");
+        printf("Incorrect values passed to task create\n");
         return -EFAULT;
     }
 
@@ -108,10 +108,10 @@ int check_task_validity(task_t* tasks,int num_tasks)
 
     #ifdef DEBUG
     puts("CTV");
-
+    printf("\ntask:%p %p\n",tasks,&tasks );
     #endif
 
-    printf("\ntask:%p %p\n",tasks,&tasks );
+    
 
     if(tasks==NULL || 
     ((uintptr_t)tasks < (uintptr_t)USR_START_ADDR || 
