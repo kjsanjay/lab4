@@ -53,7 +53,7 @@ void irq_handler()
 
         
 		// sending default timer ticks into specified timer res
-		// dev_update(kernel_up_time*OS_TIMER_RESOLUTION); 
+		   dev_update(kernel_up_time*OS_TIMER_RESOLUTION); 
 		
 
 
