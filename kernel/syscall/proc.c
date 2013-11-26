@@ -99,8 +99,10 @@ int check_task_validity(task_t* tasks,int num_tasks)
             return 0;
         }
 
-        if(tasks[i].data==0)
-            return 0;
+
+
+        // if(tasks[i].data==0)
+        //     return 0;
 
         if(tasks[i].stack_pos==NULL || 
             ((uintptr_t)tasks[i].stack_pos < (uintptr_t)USR_START_ADDR || 
@@ -113,6 +115,9 @@ int check_task_validity(task_t* tasks,int num_tasks)
             return 0;
 
         if(tasks[i].T==0)
+            return 0;
+
+        if(tasks[i].C > tasks[i].T)
             return 0;
 
     }

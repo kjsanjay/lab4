@@ -64,8 +64,7 @@ void sched_init(task_t* main_task)
  
 static void __attribute__((unused)) idle(void)
 {
-	 printf("Idle\n");
-     enable_interrupts();
+	 enable_interrupts();
 	 while(1);
 }
 
