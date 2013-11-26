@@ -2,12 +2,13 @@
  *
  * @brief kernel main
  *
- * @author 
- *	   
- *	   
- * @date   
+ * 18-342 Lab4
+Group-34
+Sanjay K Jayasankar - sjayasan
+Shobhit Kukreti - skukreti
+Yashwant Vemuru - yvemuru
+Date: Nov 25, 2013
  // */
- //
 #include <kernel.h>
 #include <task.h>
 #include <sched.h>

@@ -2,11 +2,12 @@
  *
  * @brief Kernel I/O syscall implementations
  *
- * @author Mike Kasick <mkasick@andrew.cmu.edu>
- * @date   Sun, 14 Oct 2007 00:07:38 -0400
- *
- * @author Kartik Subramanian <ksubrama@andrew.cmu.edu>
- * @date   2008-11-16
+18-342 Lab4
+Group-34
+Sanjay K Jayasankar - sjayasan
+Shobhit Kukreti - skukreti
+Yashwant Vemuru - yvemuru
+Date: Nov 25, 2013
  */
 
 #include <types.h>

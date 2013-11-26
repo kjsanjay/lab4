@@ -1,11 +1,11 @@
 /*
 
-18-342 Lab3
+18-342 Lab4
 Group-34
 Sanjay K Jayasankar - sjayasan
 Shobhit Kukreti - skukreti
 Yashwant Vemuru - yvemuru
-Date: Nov 10, 2013
+Date: Nov 25, 2013
  */
 
 /*Implementation of custom IRQ Handler*/
@@ -53,7 +53,7 @@ void irq_handler()
 
         
 		// sending default timer ticks into specified timer res
-		dev_update(kernel_up_time*OS_TIMER_RESOLUTION); 
+		// dev_update(kernel_up_time*OS_TIMER_RESOLUTION); 
 		
 
 

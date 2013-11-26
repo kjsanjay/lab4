@@ -3,10 +3,12 @@
  *
  * @brief Implements mutices.
  *
- * @author Harry Q Bovik < PUT YOUR NAMES HERE
- *
- * 
- * @date  
+ *	18-342 Lab4
+	Group-34
+	Sanjay K Jayasankar - sjayasan
+	Shobhit Kukreti - skukreti
+	Yashwant Vemuru - yvemuru
+	Date: Nov 25, 2013 
  */
 
 //#define DEBUG_MUTEX

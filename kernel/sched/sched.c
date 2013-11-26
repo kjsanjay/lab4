@@ -1,9 +1,12 @@
 /** @file sched.c
  * 
  * @brief Top level implementation of the scheduler.
- *
- * @author Kartik Subramanian <ksubrama@andrew.cmu.edu>
- * @date 2008-11-20
+	18-342 Lab4
+	Group-34
+	Sanjay K Jayasankar - sjayasan
+	Shobhit Kukreti - skukreti
+	Yashwant Vemuru - yvemuru
+	Date: Nov 25, 2013
  */
 
 #include <types.h>

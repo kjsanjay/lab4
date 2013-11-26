@@ -4,6 +4,12 @@
  * @brief Implements simulated devices.
  * @author Kartik Subramanian <ksubrama@andrew.cmu.edu>
  * @date 2008-12-01
+ 18-342 Lab4
+Group-34
+Sanjay K Jayasankar - sjayasan
+Shobhit Kukreti - skukreti
+Yashwant Vemuru - yvemuru
+Date: Nov 25, 2013
  */
 
 #include <types.h>
