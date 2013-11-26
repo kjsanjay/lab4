@@ -138,10 +138,13 @@ tcb_t* runqueue_remove(uint8_t prio)
 uint8_t highest_prio(void)
 {
 
-    uint8_t y,x,prio;
+    volatile uint8_t y,x,prio;
     y = prio_unmap_table[group_run_bits];
     x = prio_unmap_table[run_bits[y]];
     prio = (y << 3) + x;
+    if((prio==0) || (group_run_bits==0))
+        return IDLE_PRIO;
+    
     return prio;
 }
 

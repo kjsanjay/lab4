@@ -54,27 +54,22 @@ void dispatch_init(tcb_t* idle __attribute__((unused)))
  */
 void dispatch_save(void)
 {
-	tcb_t* current_tcb;
-	tcb_t* next_tcb;
-	uint8_t curr_task_prio;
+
+	tcb_t *current_tcb=NULL;
+	tcb_t *next_tcb=NULL;
+
 	uint8_t next_task_prio;
 
-	curr_task_prio = get_cur_prio();
+	current_tcb=get_cur_tcb();
 
-	next_task_prio = highest_prio();
-	
-	if(next_task_prio<curr_task_prio)
-	{	//Higher prio
-		current_tcb = get_cur_tcb();
-		next_tcb = &system_tcb[next_task_prio];
-		runqueue_add(current_tcb, curr_task_prio);
-		
-		if(next_task_prio!=IDLE_PRIO)
-			cur_tcb=runqueue_remove(next_task_prio);
+	runqueue_add(current_tcb,current_tcb->cur_prio);
+	next_task_prio=highest_prio();
 
-		ctx_switch_full((volatile void*) &next_tcb->context,
+	next_tcb=runqueue_remove(next_task_prio);
+	cur_tcb=next_tcb;
+
+		ctx_switch_full((volatile void*) &cur_tcb->context,
 			(volatile void*) &current_tcb->context);
-	}
 }
 
 /**
@@ -86,7 +81,7 @@ void dispatch_save(void)
 void dispatch_nosave(void)
 {
 	tcb_t* current_tcb;
-	tcb_t* next_tcb;
+	// tcb_t* next_tcb;
 	uint8_t curr_task_prio;
 	uint8_t next_task_prio;
 
@@ -103,9 +98,12 @@ void dispatch_nosave(void)
 			runqueue_add(current_tcb, curr_task_prio);
 
 		}
-		next_tcb = &system_tcb[next_task_prio];
+		// next_tcb = &system_tcb[next_task_prio];
 		if(next_task_prio!=IDLE_PRIO)
 			cur_tcb=runqueue_remove(next_task_prio);
+		else
+			cur_tcb=&system_tcb[IDLE_PRIO];
+
 
 		// printf("cur_tcb:%d\n",cur_tcb->cur_prio);
 		
@@ -128,10 +126,10 @@ void dispatch_nosave(void)
 void dispatch_sleep(void)
 {
 	
-	uint8_t next_task_prio;
+	volatile uint8_t next_task_prio=highest_prio();
 	tcb_t*current_tcb=get_cur_tcb();
 
-	next_task_prio=highest_prio();
+	
 
 	if(next_task_prio!=IDLE_PRIO)
 		cur_tcb=runqueue_remove(next_task_prio);
