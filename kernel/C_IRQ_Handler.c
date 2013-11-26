@@ -29,11 +29,17 @@ Date: Nov 25, 2013
 
 extern volatile unsigned long kernel_up_time;
 
+#define DEBUG
 
 void irq_handler()
 {
 	unsigned long osmr_ms;
 	unsigned long new_osmr;
+	
+	#ifdef DEBUG
+	puts("IRQH");
+
+	#endif
 	
 	//Checking if OSMR0 - is matched - 26th bit
 	unsigned int os_icpr=reg_read(INT_ICIP_ADDR);
@@ -49,7 +55,10 @@ void irq_handler()
 		kernel_up_time++;
         //Clear bit in status register
 		reg_set(OSTMR_OSSR_ADDR,OSTMR_OSSR_M0);
+		#ifdef DEBUG
+		puts("IRQT");
 
+		#endif
 
         
 		// sending default timer ticks into specified timer res

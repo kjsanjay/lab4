@@ -189,36 +189,14 @@ int mutex_unlock(int mutex)
 
 void add_to_mutex_sleep(mutex_t *mut,tcb_t *current_tcb)
 {
-	// printf("Comes to mutex_sleep\n");
-	// while(mutex_tcb!=NULL)
-	// {
-	// 	if(mutex_tcb->sleep_queue==NULL)
-	// 		break;
-	// 	else
-	// 		mutex_tcb=mutex_tcb->sleep_queue;
-
-	// }
-
-	// if(mutex_tcb==NULL)
-	// 	mutex_tcb=current_tcb;
-	// else
-	// {
-	// 	mutex_tcb->sleep_queue=current_tcb;
-	// 	current_tcb->sleep_queue=NULL;
-	// }
-
-	{
+	
         tcb_t *prev_tcb = NULL;
         tcb_t *cur_tcb;
 
-//        printf("adding %d to sleep queue head is \n", current_tcb->native_prio,
-//         mut->pSleep_queue);
         
         if(mut->pSleep_queue == NULL) {
                 mut->pSleep_queue = current_tcb;        
                 current_tcb->sleep_queue = NULL;
-//                printf("inside add finction, after adding, inside if head is %p\n",
-//                 mut->pSleep_queue);
                 return;
         }
 
@@ -231,8 +209,5 @@ void add_to_mutex_sleep(mutex_t *mut,tcb_t *current_tcb)
 
         prev_tcb->sleep_queue = current_tcb;
         current_tcb->sleep_queue = NULL;
-}
-
-
 }
 

@@ -66,7 +66,7 @@ void runqueue_init(void)
     int i;
     for(i=0;i<OS_MAX_TASKS;i++)
     {
-        run_list[i]=0;
+        run_list[i]=(tcb_t*)0;
     }
 
     for(i=0;i<OS_MAX_TASKS/8;i++)

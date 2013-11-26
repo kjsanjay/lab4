@@ -25,6 +25,9 @@ Date: Nov 25, 2013
 #include <device.h>
 
 
+#define DEBUG
+
+
 void sort_tasks(task_t *tasks,size_t num_tasks);
 
 
@@ -37,26 +40,37 @@ int check_task_validity(task_t* tasks,int num_tasks);
 int task_create(task_t* tasks, size_t num_tasks)
 {
 
-	if(num_tasks > (OS_AVAIL_TASKS-1))
+    if(num_tasks > (OS_AVAIL_TASKS-1))
 	{
-		printf("Too many tasks\n");
+		// printf("Too many tasks\n");
+         #ifdef DEBUG
+        puts("Too many tasks");
+
+        #endif
 		return -EINVAL;
 	}  
 
  
     if(check_task_validity(tasks,num_tasks)==0)
     {
-        printf("Incorrect values passed to task create\n");
+         #ifdef DEBUG
+        puts(" Error_addr");
+
+        #endif
+        // printf("Incorrect values passed to task create\n");
         return -EFAULT;
     }
 
-    
+         #ifdef DEBUG
+        puts(" NO Error");
+
+        #endif
     
     //TODO: UB Test
 
     
     sort_tasks(tasks,num_tasks);
-    dev_init();
+    
     allocate_tasks(&tasks,num_tasks);
 
 
@@ -92,49 +106,70 @@ int check_task_validity(task_t* tasks,int num_tasks)
 
     int i;
 
+    #ifdef DEBUG
+    puts("CTV");
+
+    #endif
+
+    printf("\ntask:%p %p\n",tasks,&tasks );
+
+    if(tasks==NULL || 
+    ((uintptr_t)tasks < (uintptr_t)USR_START_ADDR || 
+        (uintptr_t)tasks >= (uintptr_t)USR_END_ADDR))
+    {
+        #ifdef DEBUG
+    puts(" T_addr");
+
+    #endif
+        return 0;
+    }
+
+
     for (i = 0; i < num_tasks; ++i)
     {
 
-        if(valid_addr(tasks[i].lambda, sizeof(void *),
-                 USR_START_ADDR, USR_END_ADDR) == 0) {
-                        return 0;
-                }
+        
+        if(tasks[i].lambda==NULL || 
+            ((uintptr_t)tasks[i].lambda < (uintptr_t)USR_START_ADDR || 
+                (uintptr_t)tasks[i].lambda >= (uintptr_t)USR_END_ADDR))
+        {
+            #ifdef DEBUG
+            puts("Invalid_lambda");
+
+            #endif
+            return 0;
+        }
 
                 // validate stack_pos
-                if(valid_addr(tasks[i].stack_pos, sizeof(void *),
-                 USR_START_ADDR, USR_END_ADDR) == 0) {
-                        return 0;
-                }
-
-    // for (i = 0; i < num_tasks; ++i)
-    // {
-    //     if(tasks[i].lambda==NULL || 
-    //         ((uintptr_t)tasks[i].lambda < (uintptr_t)USR_START_ADDR || 
-    //             (uintptr_t)tasks[i].lambda >= (uintptr_t)USR_END_ADDR))
-    //     {
-    //         return 0;
-    //     }
-
-
-
-    //     // if(tasks[i].data==0)
-    //     //     return 0;
-
-    //     if(tasks[i].stack_pos==NULL || 
-    //         ((uintptr_t)tasks[i].stack_pos < (uintptr_t)USR_START_ADDR || 
-    //             (uintptr_t)tasks[i].stack_pos >= (uintptr_t)USR_END_ADDR))
-    //     {
-    //         return 0;
-    //     }
-
-        if(tasks[i].C==0)
+        if(tasks[i].stack_pos==NULL || 
+            ((uintptr_t)tasks[i].stack_pos < (uintptr_t)USR_START_ADDR || 
+                (uintptr_t)tasks[i].stack_pos >= (uintptr_t)USR_END_ADDR))
+        {
+            #ifdef DEBUG
+            puts("Invalid_stackpos");
+            #endif
             return 0;
+        }
 
+    
+    
         if(tasks[i].T==0)
+        {
+            #ifdef DEBUG
+            puts("T=0");
+            #endif
             return 0;
+        }
+            
 
         if(tasks[i].C > tasks[i].T)
+        {
+             #ifdef DEBUG
+            puts("C>T");
+            #endif
             return 0;
+        }
+            
 
     }
 
