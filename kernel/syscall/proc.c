@@ -90,26 +90,41 @@ int check_task_validity(task_t* tasks,int num_tasks)
 {
 
     int i;
+
     for (i = 0; i < num_tasks; ++i)
     {
-        if(tasks[i].lambda==NULL || 
-            ((uintptr_t)tasks[i].lambda < (uintptr_t)USR_START_ADDR || 
-                (uintptr_t)tasks[i].lambda >= (uintptr_t)USR_END_ADDR))
-        {
-            return 0;
-        }
+
+        if(valid_addr(tasks[i].lambda, sizeof(void *),
+                 USR_START_ADDR, USR_END_ADDR) == 0) {
+                        return 0;
+                }
+
+                // validate stack_pos
+                if(valid_addr(tasks[i].stack_pos, sizeof(void *),
+                 USR_START_ADDR, USR_END_ADDR) == 0) {
+                        return 0;
+                }
+
+    // for (i = 0; i < num_tasks; ++i)
+    // {
+    //     if(tasks[i].lambda==NULL || 
+    //         ((uintptr_t)tasks[i].lambda < (uintptr_t)USR_START_ADDR || 
+    //             (uintptr_t)tasks[i].lambda >= (uintptr_t)USR_END_ADDR))
+    //     {
+    //         return 0;
+    //     }
 
 
 
-        // if(tasks[i].data==0)
-        //     return 0;
+    //     // if(tasks[i].data==0)
+    //     //     return 0;
 
-        if(tasks[i].stack_pos==NULL || 
-            ((uintptr_t)tasks[i].stack_pos < (uintptr_t)USR_START_ADDR || 
-                (uintptr_t)tasks[i].stack_pos >= (uintptr_t)USR_END_ADDR))
-        {
-            return 0;
-        }
+    //     if(tasks[i].stack_pos==NULL || 
+    //         ((uintptr_t)tasks[i].stack_pos < (uintptr_t)USR_START_ADDR || 
+    //             (uintptr_t)tasks[i].stack_pos >= (uintptr_t)USR_END_ADDR))
+    //     {
+    //         return 0;
+    //     }
 
         if(tasks[i].C==0)
             return 0;

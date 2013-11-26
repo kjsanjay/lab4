@@ -24,7 +24,10 @@
 #endif
 
 mutex_t gtMutex[OS_NUM_MUTEX];
-void add_to_mutex_sleep(tcb_t* mutex_tcb,tcb_t *current_tcb);
+//void add_to_mutex_sleep(tcb_t* mutex_tcb,tcb_t *current_tcb);
+
+void add_to_mutex_sleep(mutex_t *mut,tcb_t *current_tcb);
+
 
 void mutex_init()
 {
@@ -97,13 +100,13 @@ int mutex_lock(int mutex)
 	}
 	
 
-	if(mutex_ref->bLock==1)
+	if(mutex_ref->bLock==TRUE)
 	{	//Mutex is already locked
 		//Remove from run queue & add to sleep of mutex
 		//Wait for mutex to be available
 	
 		//Add task to mutexes sleep queue
-		add_to_mutex_sleep(mutex_ref->pSleep_queue,current_tcb);
+		add_to_mutex_sleep(mutex_ref,current_tcb);//->pSleep_queue,current_tcb);
 		
 		//Removes task from runqueue & context s\w
 		
@@ -112,9 +115,9 @@ int mutex_lock(int mutex)
 	
 	}
 	
-	mutex_ref->bLock=1;
+	mutex_ref->bLock=TRUE;
 	mutex_ref->pHolding_Tcb=current_tcb;
-	enable_interrupts();
+	//enable_interrupts();
 	return 0;
 }
 
@@ -124,7 +127,7 @@ int mutex_unlock(int mutex)
 	mutex_t *mutex_ref;
 	disable_interrupts();
 
-	if(mutex < 0 || mutex > OS_NUM_MUTEX)
+	if(mutex < 0 || mutex >= OS_NUM_MUTEX)
 	{
 		printf("Invalid Mutex\n");
 		// enable_interrupts();
@@ -148,7 +151,7 @@ int mutex_unlock(int mutex)
 		return -EPERM;
 	}
 
-	if(mutex_ref->bLock==0)
+	if(mutex_ref->bLock==FALSE)
 	{//Mutex is already unlocked
 
 		printf("Mutex already unlocked.\n");
@@ -156,7 +159,7 @@ int mutex_unlock(int mutex)
 	}
 	else
 	{ //Already acquired mutex
-		mutex_ref->bLock=0;
+		mutex_ref->bLock=FALSE;
 		mutex_ref->pHolding_Tcb=NULL;
 
 		if(mutex_ref->pSleep_queue!=NULL)
@@ -172,7 +175,7 @@ int mutex_unlock(int mutex)
 
 		}
 		
-		dispatch_save();
+	//	dispatch_save();
 	}
 
 	
@@ -182,25 +185,52 @@ int mutex_unlock(int mutex)
 
 
 
-void add_to_mutex_sleep(tcb_t* mutex_tcb,tcb_t *current_tcb)
+void add_to_mutex_sleep(mutex_t *mut,tcb_t *current_tcb)
 {
-	
-	while(mutex_tcb!=NULL)
-	{
-		if(mutex_tcb->sleep_queue==NULL)
-			break;
-		else
-			mutex_tcb=mutex_tcb->sleep_queue;
+	// printf("Comes to mutex_sleep\n");
+	// while(mutex_tcb!=NULL)
+	// {
+	// 	if(mutex_tcb->sleep_queue==NULL)
+	// 		break;
+	// 	else
+	// 		mutex_tcb=mutex_tcb->sleep_queue;
 
-	}
+	// }
 
-	if(mutex_tcb==NULL)
-		mutex_tcb=current_tcb;
-	else
+	// if(mutex_tcb==NULL)
+	// 	mutex_tcb=current_tcb;
+	// else
+	// {
+	// 	mutex_tcb->sleep_queue=current_tcb;
+	// 	current_tcb->sleep_queue=NULL;
+	// }
+
 	{
-		mutex_tcb->sleep_queue=current_tcb;
-		current_tcb->sleep_queue=NULL;
-	}
+        tcb_t *prev_tcb = NULL;
+        tcb_t *cur_tcb;
+
+//        printf("adding %d to sleep queue head is \n", current_tcb->native_prio,
+//         mut->pSleep_queue);
+        
+        if(mut->pSleep_queue == NULL) {
+                mut->pSleep_queue = current_tcb;        
+                current_tcb->sleep_queue = NULL;
+//                printf("inside add finction, after adding, inside if head is %p\n",
+//                 mut->pSleep_queue);
+                return;
+        }
+
+        cur_tcb = mut->pSleep_queue;
+
+        while(cur_tcb != NULL) {
+                prev_tcb = cur_tcb;
+                cur_tcb = cur_tcb->sleep_queue;
+        }
+
+        prev_tcb->sleep_queue = current_tcb;
+        current_tcb->sleep_queue = NULL;
+}
+
 
 }
 
