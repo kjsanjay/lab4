@@ -41,7 +41,9 @@ void sleep_syscall(unsigned long millis  __attribute__((unused)))
 {
 	 		 sleep_counter=millis;
 			 sleep_counter=kernel_up_time + (sleep_counter/OS_TIMER_RESOLUTION);
-			
+			// #ifdef DEBUG
+			//  printf("%s\n", );
+			//  #endif
 			 while(kernel_up_time < sleep_counter);
 			 return;
 }

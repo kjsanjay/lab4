@@ -70,12 +70,13 @@ int C_SWI_Handler(int swi_num, unsigned* param)
 		break;
 
 		case TIME_SWI:
+			enable_interrupts();
 			param[0] = time_syscall();
 			
 		break;
 
 		case SLEEP_SWI:
-
+		enable_interrupts();		
 		sleep_syscall(param[0]);
 		param[0] = 0;
 

@@ -127,7 +127,7 @@ int mutex_unlock(int mutex)
 {
 	tcb_t* current_tcb,*next_tcb;
 	mutex_t *mutex_ref;
-	disable_interrupts();
+	
 
 	if(mutex < 0 || mutex >= OS_NUM_MUTEX)
 	{
@@ -176,8 +176,8 @@ int mutex_unlock(int mutex)
 			runqueue_add(next_tcb,next_tcb->cur_prio);
 
 		}
-		
-	//	dispatch_save();
+		disable_interrupts();
+		dispatch_save();
 	}
 
 	
