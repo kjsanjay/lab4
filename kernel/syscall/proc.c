@@ -42,9 +42,8 @@ int task_create(task_t* tasks, size_t num_tasks)
 
     if(num_tasks > (OS_AVAIL_TASKS-1))
 	{
-		printf("Too many tasks\n");
          #ifdef DEBUG
-        puts("Too many tasks");
+            puts("Too many tasks\n");
 
         #endif
 		return -EINVAL;
@@ -53,16 +52,15 @@ int task_create(task_t* tasks, size_t num_tasks)
  
     if(check_task_validity(tasks,num_tasks)==0)
     {
-         #ifdef DEBUG
-        puts(" Error_addr");
-
+        #ifdef DEBUG
+            puts("Incorrect values passed to task create\n");
         #endif
-        printf("Incorrect values passed to task create\n");
+        
         return -EFAULT;
     }
 
          #ifdef DEBUG
-        puts(" NO Error");
+            puts("No Error");
 
         #endif
     
@@ -93,7 +91,7 @@ int event_wait(unsigned int dev  __attribute__((unused)))
 }
 
 /* An invalid syscall causes the kernel to exit. */
-void invalid_syscall(unsigned int call_num  __attribute__((unused)))
+void invalid_syscall(unsigned int call_num)
 {
 	printf("Kernel panic: invalid syscall -- 0x%08x\n", call_num);
 
@@ -101,14 +99,16 @@ void invalid_syscall(unsigned int call_num  __attribute__((unused)))
 	while(1);
 }
 
+
+/*Checks validity of task parameters */
 int check_task_validity(task_t* tasks,int num_tasks)
 {
 
     int i;
 
     #ifdef DEBUG
-    puts("CTV");
-    printf("\ntask:%p %p\n",tasks,&tasks );
+        puts("in check_task_validity\n");
+        printf("\ntask:%p %p\n",tasks,&tasks );
     #endif
 
     
@@ -118,9 +118,9 @@ int check_task_validity(task_t* tasks,int num_tasks)
         (uintptr_t)tasks >= (uintptr_t)USR_END_ADDR))
     {
         #ifdef DEBUG
-    puts(" T_addr");
-
-    #endif
+        
+        puts("Error in task address\n");
+        #endif
         return 0;
     }
 
@@ -128,7 +128,6 @@ int check_task_validity(task_t* tasks,int num_tasks)
     for (i = 0; i < num_tasks; ++i)
     {
 
-        
         if(tasks[i].lambda==NULL || 
             ((uintptr_t)tasks[i].lambda < (uintptr_t)USR_START_ADDR || 
                 (uintptr_t)tasks[i].lambda >= (uintptr_t)USR_END_ADDR))
@@ -156,7 +155,7 @@ int check_task_validity(task_t* tasks,int num_tasks)
         if(tasks[i].T==0)
         {
             #ifdef DEBUG
-            puts("T=0");
+                puts("T=0 Error\n");
             #endif
             return 0;
         }
@@ -164,15 +163,14 @@ int check_task_validity(task_t* tasks,int num_tasks)
 
         if(tasks[i].C > tasks[i].T)
         {
-             #ifdef DEBUG
-            puts("C>T");
+            #ifdef DEBUG
+                puts("C>T");
             #endif
             return 0;
         }
             
 
     }
-
 
     return 1;
 }
@@ -201,10 +199,10 @@ void sort_tasks(task_t *tasks,size_t num_tasks)
                 tasks[j].T=tasks[j+1].T;
 
                 tasks[j+1].lambda=tmp.lambda;
-                tasks[j+1].data=tasks[j].data;
-                tasks[j+1].stack_pos=tasks[j].stack_pos;
-                tasks[j+1].C=tasks[j].C;
-                tasks[j+1].T=tasks[j].T;
+                tasks[j+1].data=tmp.data;
+                tasks[j+1].stack_pos=tmp.stack_pos;
+                tasks[j+1].C=tmp.C;
+                tasks[j+1].T=tmp.T;
 
             }
         }

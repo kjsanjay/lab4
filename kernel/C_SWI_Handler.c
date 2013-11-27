@@ -76,51 +76,45 @@ int C_SWI_Handler(int swi_num, unsigned* param)
 		break;
 
 		case SLEEP_SWI:
-		enable_interrupts();		
-		sleep_syscall(param[0]);
-		param[0] = 0;
+			enable_interrupts();		
+			sleep_syscall(param[0]);
+			param[0] = 0;
 
 		break;
 
 		case CREATE_SWI:
 
-		param[0]=task_create((task_t *)param[0],(size_t)param[1]);
+			param[0]=task_create((task_t *)param[0],(size_t)param[1]);
 
-		//printf("Coming to create swi in C_SWI_Handler\n");
 
 		break;
 
 		case MUTEX_CREATE:
-		disable_interrupts();
-		param[0]=mutex_create();
+			disable_interrupts();
+			param[0]=mutex_create();
 
 		break;
 
 		case MUTEX_LOCK:
-		disable_interrupts();
-		param[0]=mutex_lock((int) param[0]);
+			disable_interrupts();
+			param[0]=mutex_lock((int) param[0]);
 
 		break;
 
 		case MUTEX_UNLOCK:
-
-
-		param[0]=mutex_unlock((int) param[0]);
+			param[0]=mutex_unlock((int) param[0]);
 
 		break;
 
 		case EVENT_WAIT:
-
-
-		param[0]=event_wait((int) param[0]);
-
+			param[0]=event_wait((int) param[0]);
 		break;
 
 
 		default:
-			//For invalid SWI number
 			puts("Invalid SWI no.\n");
 			param[0]=  -0xBADC0DE;
+			invalid_syscall(swi_num);
 		break;
 
 
