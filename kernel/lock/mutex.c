@@ -11,7 +11,7 @@
 	Date: Nov 25, 2013 
  */
 
-//#define DEBUG_MUTEX
+// #define DEBUG_MUTEX
 
 #include <lock.h>
 #include <task.h>
@@ -24,6 +24,7 @@
 #ifdef DEBUG_MUTEX
 #include <exports.h> // temp
 #endif
+
 
 mutex_t gtMutex[OS_NUM_MUTEX];
 //void add_to_mutex_sleep(tcb_t* mutex_tcb,tcb_t *current_tcb);
@@ -62,7 +63,9 @@ int mutex_create(void)
 	
 	if(i == OS_NUM_MUTEX)
 	{
+		#ifdef DEBUG_MUTEX
 		printf("Mutex limit exceeded\n");
+		#endif
 		return -ENOMEM;
 	}
 		
@@ -79,7 +82,9 @@ int mutex_lock(int mutex)
 	
 	if(mutex < 0 || mutex > OS_NUM_MUTEX)
 	{
+		#ifdef DEBUG_MUTEX
 		printf("Invalid Mutex\n");
+		#endif
 		return -EINVAL;
 	}
 
@@ -88,7 +93,9 @@ int mutex_lock(int mutex)
 
 	if(mutex_ref->bAvailable==TRUE)
 	{
+		#ifdef DEBUG_MUTEX
 		printf("User has not created this mutex\n");
+		#endif
 		return -EINVAL;
 	}
 	
@@ -96,7 +103,9 @@ int mutex_lock(int mutex)
 	//Check for deadlock. if current task is already holding
 	if(mutex_ref->pHolding_Tcb==current_tcb)
 	{
+		#ifdef DEBUG_MUTEX
 		printf("deadlock!!\n");
+		#endif
 		return -EDEADLOCK;
 
 	}
@@ -131,8 +140,9 @@ int mutex_unlock(int mutex)
 
 	if(mutex < 0 || mutex >= OS_NUM_MUTEX)
 	{
+		#ifdef DEBUG_MUTEX
 		printf("Invalid Mutex\n");
-		// enable_interrupts();
+		#endif
 		return -EINVAL;
 	}
 	
@@ -140,23 +150,27 @@ int mutex_unlock(int mutex)
 
 	if(mutex_ref->bAvailable==TRUE)
 	{
+		#ifdef DEBUG_MUTEX
 		printf("User has not created this mutex\n");
-		// enable_interrupts();
+		#endif
 		return -EINVAL;
 	}
 	current_tcb=get_cur_tcb();
 	
 	if(mutex_ref->pHolding_Tcb!=current_tcb)
 	{
+		#ifdef DEBUG_MUTEX
 		printf("Current task does not hold mutex.\n");
-		// enable_interrupts();
+		#endif
 		return -EPERM;
 	}
 
 	if(mutex_ref->bLock==FALSE)
 	{//Mutex is already unlocked
 
+		#ifdef DEBUG_MUTEX
 		printf("Mutex already unlocked.\n");
+		#endif
 
 	}
 	else
@@ -192,7 +206,6 @@ void add_to_mutex_sleep(mutex_t *mut,tcb_t *current_tcb)
 	
         tcb_t *prev_tcb = NULL;
         tcb_t *cur_tcb;
-
         
         if(mut->pSleep_queue == NULL) {
                 mut->pSleep_queue = current_tcb;        
