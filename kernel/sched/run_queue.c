@@ -123,12 +123,13 @@ tcb_t* runqueue_remove(uint8_t prio)
     ostcbx = prio & 0x07;
 
 
+    run_bits[ostcby] &= ~(0x1 << ostcbx);
+
     if(run_bits[ostcby] == 0)
-    { // Have to do this so that group run bits are not modified when there is 
-        //something else in that group.
+    { //Clear if no other tasks
         group_run_bits &= ~(0x1 << ostcby);
     }
-    run_bits[ostcby] &= ~(0x1 << ostcbx);
+    
     
     return return_tcb;
 
@@ -145,8 +146,7 @@ uint8_t highest_prio(void)
     y = prio_unmap_table[group_run_bits];
     x = prio_unmap_table[run_bits[y]];
     prio = (y << 3) + x;
-    if((prio==0) || (group_run_bits==0))
-        return IDLE_PRIO;
+    
     
     return prio;
 }

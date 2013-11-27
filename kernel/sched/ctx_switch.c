@@ -40,8 +40,6 @@ void dispatch_init(tcb_t* idle __attribute__((unused)))
 {
 	
 	cur_tcb = idle;
-	// print_run_queue();
-	// printf("Coming to dispatch_init\n");
 	disable_interrupts();
 	dispatch_nosave();
 }
@@ -68,7 +66,11 @@ void dispatch_save(void)
 	runqueue_add(current_tcb,current_tcb->cur_prio);
 	next_task_prio=highest_prio();
 
-	next_tcb=runqueue_remove(next_task_prio);
+	if(next_task_prio!=IDLE_PRIO)
+		next_tcb=runqueue_remove(next_task_prio);
+	else
+		next_tcb=&system_tcb[IDLE_PRIO];
+
 	cur_tcb=next_tcb;
 
 		ctx_switch_full((volatile void*) &cur_tcb->context,

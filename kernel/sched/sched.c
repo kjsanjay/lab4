@@ -110,8 +110,6 @@ void allocate_tasks(task_t** tasks, size_t num_tasks)
 	}
 
 	
-    // print_run_queue();
-
     // Creates idles task & adds to run queue
     sched_init(&idle_task); 
 

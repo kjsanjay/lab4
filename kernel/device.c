@@ -49,6 +49,13 @@ const unsigned long dev_freq[NUM_DEVICES] = { 100, 200, 300, 400, 500, 600, 700,
 
 
 
+
+
+
+
+
+
+
 static dev_t devices[NUM_DEVICES];
 
  int init_time=0; // Needed to find the duration of sleep
@@ -142,6 +149,7 @@ void dev_update(unsigned long millis __attribute__((unused)))
 			devices[i].next_match += dev_freq[i]; // update the next frequency value for sleeping
 		}
 	}
+
 	if(task_flag>0)
 	{
 		// #ifdef DEBUG
