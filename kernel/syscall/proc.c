@@ -104,7 +104,7 @@ void invalid_syscall(unsigned int call_num)
 int check_task_validity(task_t* tasks,int num_tasks)
 {
 
-    int i;
+    int i,j;
 
     #ifdef DEBUG
         puts("in check_task_validity\n");
@@ -170,7 +170,27 @@ int check_task_validity(task_t* tasks,int num_tasks)
         }
             
 
+    }// end of for-loop
+
+    for (i = 0; i < num_tasks-1; i++)
+    {
+        for(j=i+1;j<num_tasks;j++)
+        {
+            if(tasks[i].stack_pos==tasks[j].stack_pos)
+            {
+                #ifdef DEBUG
+                    puts("Overlapping stacks!");
+                #endif
+                return 0;
+
+            }
+
+
+        }
+
     }
+
+
 
     return 1;
 }
