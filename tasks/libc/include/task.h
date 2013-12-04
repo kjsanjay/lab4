@@ -17,15 +17,16 @@
  */
 typedef void (*task_fun_t)(void*);
 
-struct task
+typedef struct task
 {
 	task_fun_t    lambda;      /**< The root function of this task */
 	void*         data;        /**< Argument to the root function */
 	void*         stack_pos;   /**< The starting position of the task's sp */
 	unsigned long C;           /**< The worst-case computation time */
 	unsigned long T;           /**< The task's period */
-};
-typedef struct task task_t;
+	unsigned long B;           /**< The task's worst-case blocking time */
+}task_t;
+
 
 
 int task_create(task_t* tasks, size_t num_tasks);
