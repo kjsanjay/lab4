@@ -10,7 +10,7 @@
 	Date: Nov 25, 2013
  */
 
-//#define DEBUG 0
+//#define DEBUG
 
 #include <sched.h>
 
@@ -34,13 +34,35 @@
  * @return 0  The test failed.
  * @return 1  Test succeeded.  The tasks are now in order.
  */
-int assign_schedule(task_t** tasks  __attribute__((unused)), size_t num_tasks  __attribute__((unused)))
+int assign_schedule(task_t** tasks, size_t num_tasks)
 {
-
-
-
 	
-	return 1; // fix this; dummy return to prevent compiler warnings	
+
+	int i,k;
+	unsigned long calc_util;
+	task_t *a_tasks = *tasks;
+
+	sort_tasks(a_tasks,num_tasks);
+
+
+	for(k=1;k<=num_tasks;k++)
+	{	
+		calc_util=0;
+		//Ci/Ti
+		for(i=1;i<=k;i++) 
+		{
+			calc_util+=tasks[i-1].C*1000/tasks[i-1].T;
+
+		}
+		calc_util+=tasks[k-1].B*1000/tasks[k-1].T;
+		if(calc_util>U_UpperBound[k-1])
+		{
+			puts("Schedule fails\n");
+			return 0;
+		}
+
+	}
+	return 1; 
 }
 	
 

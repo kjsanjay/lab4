@@ -64,12 +64,15 @@ int task_create(task_t* tasks, size_t num_tasks)
 
         #endif
     
-    //TODO: UB Test
+    
+    // Checks & runs if task-set is schedulable
+    if(assign_schedule(&tasks,num_tasks)==1)
+    {
+        allocate_tasks(&tasks,num_tasks);
+
+    }
 
     
-    sort_tasks(tasks,num_tasks);
-    
-    allocate_tasks(&tasks,num_tasks);
 
 
     return 0;
@@ -211,18 +214,21 @@ void sort_tasks(task_t *tasks,size_t num_tasks)
                 tmp.stack_pos=tasks[j].stack_pos;
                 tmp.C=tasks[j].C;
                 tmp.T=tasks[j].T;
+                tmp.B=tasks[j].B;
 
                 tasks[j].lambda=tasks[j+1].lambda;
                 tasks[j].data=tasks[j+1].data;
                 tasks[j].stack_pos=tasks[j+1].stack_pos;
                 tasks[j].C=tasks[j+1].C;
                 tasks[j].T=tasks[j+1].T;
+                tasks[j].B=tasks[j+1].B;
 
                 tasks[j+1].lambda=tmp.lambda;
                 tasks[j+1].data=tmp.data;
                 tasks[j+1].stack_pos=tmp.stack_pos;
                 tasks[j+1].C=tmp.C;
                 tasks[j+1].T=tmp.T;
+                tasks[j+1].B=tmp.B;
 
             }
         }
