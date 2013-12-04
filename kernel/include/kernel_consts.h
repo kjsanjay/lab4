@@ -41,9 +41,5 @@ Date: Nov 10, 2013
 // #define TIMER_RES 10 //ms <= moved to config.h
 
 
-//Look-up table for utilization
-unsigned long U_UpperBound[] = {
-1000,828,780,757,757,743,735,729,724,721,
-718,715,714,712,711,709,708,707,707,706,
-705,705,704,704,703,703,702
-};
+
+

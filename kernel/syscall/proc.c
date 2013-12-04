@@ -28,7 +28,7 @@ Date: Nov 25, 2013
 // #define DEBUG
 
 
-void sort_tasks(task_t *tasks,size_t num_tasks);
+
 
 
 int check_task_validity(task_t* tasks,int num_tasks);
@@ -80,14 +80,21 @@ int task_create(task_t* tasks, size_t num_tasks)
 
 }
 
-int event_wait(unsigned int dev  __attribute__((unused)))
+int event_wait(unsigned int dev)
 {
   if(dev >= NUM_DEVICES)
   {
     return -EINVAL;
   }
   
-  dev_wait(dev);
+  //Does not allow mutex to sleep while holding mutex
+  if(get_cur_tcb()->holds_lock!=0)
+  {
+    return EHOLDSLOCK;
+
+  }
+  else 
+    dev_wait(dev);
 
   return 0;
 
@@ -198,40 +205,4 @@ int check_task_validity(task_t* tasks,int num_tasks)
     return 1;
 }
 
-void sort_tasks(task_t *tasks,size_t num_tasks)
-{
-    unsigned int i,j;
-    task_t tmp;
-    for(i=0;i<num_tasks;i++)
-    {
-        for(j=0;j<num_tasks-1;j++)
-        {
-            if(tasks[j].T > tasks[j+1].T)
-            {
-                //Swap
-                tmp.lambda=tasks[j].lambda;
-                tmp.data=tasks[j].data;
-                tmp.stack_pos=tasks[j].stack_pos;
-                tmp.C=tasks[j].C;
-                tmp.T=tasks[j].T;
-                tmp.B=tasks[j].B;
-
-                tasks[j].lambda=tasks[j+1].lambda;
-                tasks[j].data=tasks[j+1].data;
-                tasks[j].stack_pos=tasks[j+1].stack_pos;
-                tasks[j].C=tasks[j+1].C;
-                tasks[j].T=tasks[j+1].T;
-                tasks[j].B=tasks[j+1].B;
-
-                tasks[j+1].lambda=tmp.lambda;
-                tasks[j+1].data=tmp.data;
-                tasks[j+1].stack_pos=tmp.stack_pos;
-                tasks[j+1].C=tmp.C;
-                tasks[j+1].T=tmp.T;
-                tasks[j+1].B=tmp.B;
-
-            }
-        }
-    }
-}
 

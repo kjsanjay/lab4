@@ -120,6 +120,8 @@ int mutex_lock(int mutex)
 	}
 	
 
+	
+
 	if(mutex_ref->bLock==TRUE)
 	{	//Mutex is already locked
 		//Remove from run queue & add to sleep of mutex
@@ -138,6 +140,8 @@ int mutex_lock(int mutex)
 	{ //If mutex is available
 		mutex_ref->bLock=TRUE;
 		mutex_ref->pHolding_Tcb=current_tcb;
+		current_tcb->cur_prio=0;
+		current_tcb->holds_lock++;
 
 	}
 	
@@ -187,8 +191,12 @@ int mutex_unlock(int mutex)
 	}
 	else
 	{ //Already acquired mutex
+		//Normal case
+		//Clears unlock
 		mutex_ref->bLock=FALSE;
 		mutex_ref->pHolding_Tcb=NULL;
+		current_tcb->holds_lock--;
+		current_tcb->cur_prio=current_tcb->native_prio;
 
 		if(mutex_ref->pSleep_queue!=NULL)
 		{// Next task waiting for the mutex

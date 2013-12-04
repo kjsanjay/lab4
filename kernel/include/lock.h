@@ -17,6 +17,8 @@
 #ifndef _LOCK_H_
 #define _LOCK_H_
 
+#define EHOLDSLOCK 64
+
 struct mutex
 {
 	bool_e	bAvailable;		/* flag for availability */
