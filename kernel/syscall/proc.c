@@ -204,7 +204,7 @@ void sort_tasks(task_t *tasks,size_t num_tasks)
     task_t tmp;
     for(i=0;i<num_tasks;i++)
     {
-        for(j=i;j<num_tasks-1;j++)
+        for(j=0;j<num_tasks-1;j++)
         {
             if(tasks[j].T > tasks[j+1].T)
             {
