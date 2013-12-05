@@ -25,9 +25,7 @@ Date: Nov 25, 2013
 #include <device.h>
 
 
-// #define DEBUG
-
-
+#define DEBUG
 
 
 
@@ -68,14 +66,17 @@ int task_create(task_t* tasks, size_t num_tasks)
     // Checks & runs if task-set is schedulable
     if(assign_schedule(&tasks,num_tasks)==1)
     {
+        #ifdef DEBUG
+            puts("Passed UB Test\n");
+        #endif
         allocate_tasks(&tasks,num_tasks);
 
     }
 
-    
-
-
-    return 0;
+    #ifdef DEBUG
+        puts("Failed UB Test\n");
+    #endif
+    return -ESCHED;
 
 
 }
@@ -87,13 +88,15 @@ int event_wait(unsigned int dev)
     return -EINVAL;
   }
   
+  #ifdef ENABLE_HLP
   //Does not allow mutex to sleep while holding mutex
   if(get_cur_tcb()->holds_lock!=0)
   {
-    return EHOLDSLOCK;
+    return -EHOLDSLOCK;
 
   }
-  else 
+  #endif
+
     dev_wait(dev);
 
   return 0;
@@ -118,7 +121,7 @@ int check_task_validity(task_t* tasks,int num_tasks)
 
     #ifdef DEBUG
         puts("in check_task_validity\n");
-        printf("\ntask:%p %p\n",tasks,&tasks );
+        printf("task:%p %p\n",tasks,&tasks );
     #endif
 
     
@@ -139,11 +142,11 @@ int check_task_validity(task_t* tasks,int num_tasks)
     {
 
         if(tasks[i].lambda==NULL || 
-            ((uintptr_t)tasks[i].lambda < (uintptr_t)USR_START_ADDR || 
-                (uintptr_t)tasks[i].lambda >= (uintptr_t)USR_END_ADDR))
+            ((unsigned long)tasks[i].lambda < USR_START_ADDR || 
+                (unsigned long)tasks[i].lambda >= USR_END_ADDR))
         {
             #ifdef DEBUG
-            puts("Invalid_lambda");
+            printf("Invalid_lambda:%p\n",tasks[i].lambda);
 
             #endif
             return 0;
@@ -151,11 +154,11 @@ int check_task_validity(task_t* tasks,int num_tasks)
 
                 // validate stack_pos
         if(tasks[i].stack_pos==NULL || 
-            ((uintptr_t)tasks[i].stack_pos < (uintptr_t)USR_START_ADDR || 
-                (uintptr_t)tasks[i].stack_pos >= (uintptr_t)USR_END_ADDR))
+            ((unsigned long)tasks[i].stack_pos < USR_START_ADDR || 
+                (unsigned long)tasks[i].stack_pos >= USR_END_ADDR))
         {
             #ifdef DEBUG
-            puts("Invalid_stackpos");
+            printf("Invalid_stackpos:%p\n",tasks[i].stack_pos);
             #endif
             return 0;
         }

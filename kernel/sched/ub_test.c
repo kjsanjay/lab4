@@ -49,14 +49,17 @@ int assign_schedule(task_t** tasks, size_t num_tasks)
 {
 	
 
-	size_t i,k;
-	unsigned long calc_util;
 	task_t *a_tasks = *tasks;
 
+	
+	#ifdef UB_TEST
+	size_t i,k;
+	unsigned long calc_util;
+	#endif
 
 	sort_tasks(a_tasks,num_tasks);
 
-
+	#ifdef UB_TEST
 	for(k=1;k<=num_tasks;k++)
 	{	
 		calc_util=0;
@@ -75,6 +78,8 @@ int assign_schedule(task_t** tasks, size_t num_tasks)
 		}
 
 	}
+	#endif
+	
 	return 1; 
 }
 	

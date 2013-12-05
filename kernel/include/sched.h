@@ -12,6 +12,8 @@
 #include <task.h>
 #include <types.h>
 
+#define UB_TEST
+
 void sched_init(task_t* main_task);
 
 /* Scheduler invocations */

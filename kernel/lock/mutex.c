@@ -136,14 +136,16 @@ int mutex_lock(int mutex)
 		//Returns only after context switched-in
 	
 	}
-	else
-	{ //If mutex is available
+	
+		//If mutex is available
 		mutex_ref->bLock=TRUE;
 		mutex_ref->pHolding_Tcb=current_tcb;
+		#ifdef ENABLE_HLP
 		current_tcb->cur_prio=0;
-		current_tcb->holds_lock++;
+		current_tcb->holds_lock=1;
+		#endif
 
-	}
+	
 	
 	return 0;
 }
@@ -195,8 +197,11 @@ int mutex_unlock(int mutex)
 		//Clears unlock
 		mutex_ref->bLock=FALSE;
 		mutex_ref->pHolding_Tcb=NULL;
-		current_tcb->holds_lock--;
+		
+		#ifdef ENABLE_HLP
+		current_tcb->holds_lock=0;
 		current_tcb->cur_prio=current_tcb->native_prio;
+		#endif
 
 		if(mutex_ref->pSleep_queue!=NULL)
 		{// Next task waiting for the mutex

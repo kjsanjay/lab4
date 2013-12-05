@@ -17,7 +17,8 @@
 #ifndef _LOCK_H_
 #define _LOCK_H_
 
-#define EHOLDSLOCK 64
+#define EHOLDSLOCK 60
+#define ENABLE_HLP
 
 struct mutex
 {
