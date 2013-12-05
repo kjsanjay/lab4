@@ -10,7 +10,7 @@
 	Date: Nov 25, 2013
  */
 
-#define DEBUG
+// #define DEBUG
 
 #include <sched.h>
 
@@ -67,11 +67,15 @@ int assign_schedule(task_t** tasks, size_t num_tasks)
 		for(i=1;i<=k;i++) 
 		{
 			calc_util+=a_tasks[i-1].C*1000/a_tasks[i-1].T;
+			#ifdef DEBUG
 			printf("C=%lu T=%lu U=%lu\n",a_tasks[i-1].C,a_tasks[i-1].T,calc_util);
+			#endif
 
 		}
 		calc_util+=a_tasks[k-1].B*1000/a_tasks[k-1].T;
+		#ifdef DEBUG
 		printf("B=%lu T=%lu U=%lu\n",a_tasks[k-1].B,a_tasks[k-1].T,calc_util);
+		#endif
 		if(calc_util>u_UpperBound[k-1])
 		{
 			return 0;
