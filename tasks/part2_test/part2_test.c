@@ -10,7 +10,9 @@
 #include <stdio.h>
 #include <task.h>
 #include <unistd.h>
+ #include <lock.h>
 
+int m;
 
 void panic(const char* str)
 {
@@ -18,23 +20,52 @@ void panic(const char* str)
 	while(1);
 }
 
+// void fun1(void* str)
+// {
+// 	while(1)
+// 	{
+// 		putchar((int)str);
+// 		if (event_wait(0) < 0)
+// 			panic("Dev 0 failed");
+// 	}
+// }
+
 void fun1(void* str)
 {
+	m=mutex_create();
+	mutex_lock(m);
 	while(1)
 	{
+		
 		putchar((int)str);
-		if (event_wait(0) < 0)
-			panic("Dev 0 failed");
+		sleep(4000);
+		break;
+
+		
 	}
+	mutex_unlock(m);
+	if (event_wait(0) < 0)
+			panic("Dev 0 failed");
 }
 
+// void fun2(void* str)
+// {
+// 	while(1)
+// 	{
+// 		putchar((int)str);
+// 		if (event_wait(1) < 0)
+// 			panic("Dev 1 failed");
+// 	}
+// }
 void fun2(void* str)
 {
+	mutex_lock(m);
 	while(1)
 	{
+		sleep(2000);
 		putchar((int)str);
-		if (event_wait(1) < 0)
-			panic("Dev 1 failed");
+		// if (event_wait(1) < 0)
+		// 	panic("Dev 1 failed");
 	}
 }
 
