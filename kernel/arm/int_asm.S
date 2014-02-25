@@ -67,7 +67,9 @@ FUNC(irq_wrapper)
 	ldmfd    sp, {r0, sp, lr}^
 	add      sp, sp, #12
 	msr      spsr, r0
-	ldmfd    sp!, {r0-r3, r8, ip, lr, pc}^
+	ldmfd    sp!, {r0-r3, r8, ip, lr, pc}^ 
+	@ spsr gets restored into cpsr. in a single instruction
+
 
 /*
  * We have exactly one IRQ save area.  This is shared across all tasks.  When an
